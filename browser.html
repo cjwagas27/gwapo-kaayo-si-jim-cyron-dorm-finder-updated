@@ -27,8 +27,8 @@
 
     /* Top Navbar */
     .navbar {
-      height: 70px;
-      background: #1b2d47;
+      height: 68px;
+      background: #080F20;
       color: #ffffff;
       display: flex;
       align-items: center;
@@ -37,71 +37,85 @@
       position: sticky;
       top: 0;
       z-index: 100;
+      border-bottom: 1px solid rgba(203,213,225,0.08);
+      box-shadow: 0 1px 20px rgba(0,0,0,0.3);
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 800;
       color: #ffffff;
       text-decoration: none;
+      letter-spacing: -0.04em;
     }
+    .brand .gold { color: #FFC928; }
 
     .brand-mark {
       width: 34px; height: 34px;
-      background: #314c75;
+      background: #2563EB;
       border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
     }
 
     .nav-auth-links {
       display: flex;
-      gap: 12px;
+      gap: 10px;
+      align-items: center;
     }
 
     .btn-nav-login {
       background: transparent;
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1.5px solid rgba(255,255,255,0.22);
       color: #ffffff;
-      padding: 0.5rem 1.1rem;
+      padding: 7px 16px;
       border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 700;
+      font-size: 0.875rem;
+      font-weight: 600;
       text-decoration: none;
-      transition: background 0.2s;
+      transition: border-color 0.15s, background 0.15s;
     }
-    .btn-nav-login:hover { background: rgba(255,255,255,0.1); }
+    .btn-nav-login:hover { border-color: rgba(255,255,255,0.55); background: rgba(255,255,255,0.06); }
 
     .btn-nav-signup {
-      background: #2563eb;
+      background: #2563EB;
       border: none;
       color: #ffffff;
-      padding: 0.5rem 1.1rem;
+      padding: 7px 18px;
       border-radius: 8px;
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       font-weight: 700;
       text-decoration: none;
-      transition: background 0.2s;
+      transition: background 0.15s, transform 0.15s;
+      box-shadow: 0 2px 10px rgba(37,99,235,0.35);
     }
-    .btn-nav-signup:hover { background: #1d4ed8; }
+    .btn-nav-signup:hover { background: #1D4ED8; transform: translateY(-1px); }
 
     /* Hero Banner */
     .hero-banner {
-      background: #18283f;
+      background: #111B30;
       padding: 3rem 2rem 2.5rem 2rem;
       text-align: center;
       color: #ffffff;
+      border-bottom: 1px solid rgba(203,213,225,0.07);
     }
 
     .hero-title {
       font-size: 2.2rem;
       font-weight: 800;
       margin-bottom: 8px;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
     }
-    .hero-title span { color: #f59e0b; }
+    .hero-title .grad {
+      background: linear-gradient(135deg, #FFC928 0%, #FFAA00 40%, #60A5FA 80%, #2563EB 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 12px rgba(255,201,40,0.4)) drop-shadow(0 0 24px rgba(37,99,235,0.25));
+    }
 
     .hero-subtitle {
       font-size: 0.95rem;
@@ -285,14 +299,15 @@
       border: 1px solid #e2e8f0;
       border-radius: 16px;
       overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
       display: flex;
       flex-direction: column;
       cursor: pointer;
     }
     .dorm-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+      border-color: rgba(37,99,235,0.3);
     }
 
     .dorm-img-wrap {
@@ -369,7 +384,7 @@
     .price-breakdown .pb-free { font-size: 0.76rem; color: #15803d; font-weight: 700; margin-top: 6px; }
     .dorm-total { font-size: 0.68rem; font-weight: 700; color: #2563eb; margin-top: 2px; text-align: right; }
 
-    .dorm-price { font-size: 1rem; font-weight: 800; color: #0f172a; }
+    .dorm-price { font-size: 1rem; font-weight: 800; color: #FFC928; }
     .dorm-price span { font-size: 0.75rem; font-weight: 500; color: #64748b; }
 
     /* DETAIL VIEW TAB */
@@ -773,20 +788,20 @@
 
     /* ── Leaflet map + pin (same look as the homepage map) ── */
     .df-pin {
-      width: 30px; height: 30px;
-      background: #16a34a;
-      border: 2px solid #ffffff;
+      width: 28px; height: 28px;
+      background: #2563EB;
+      border: 2.5px solid #ffffff;
       border-radius: 50% 50% 50% 0;
       transform: rotate(-45deg);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.5);
     }
     .df-pin::after {
       content: '';
       position: absolute;
-      width: 10px; height: 10px;
+      width: 9px; height: 9px;
       background: #ffffff;
       border-radius: 50%;
-      top: 8px; left: 8px;
+      top: 7px; left: 7px;
     }
     .leaflet-container { font-family: 'Plus Jakarta Sans', sans-serif; z-index: 0; }
     .btn-open-maps, .map-open-btn { z-index: 1000; }
@@ -800,7 +815,7 @@
       <div class="brand-mark">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M12 2L3 9v13h6v-7h6v7h6V9z"/></svg>
       </div>
-      DormFinder
+      Dorm<span class="gold">Finder</span>
     </a>
     <div class="nav-auth-links" id="navAuthLinks">
       <a href="signin.html" class="btn-nav-login">Sign In</a>
@@ -812,7 +827,7 @@
   <div id="browseViewContainer">
     <!-- HERO SEARCH BANNER -->
     <div class="hero-banner">
-      <h1 class="hero-title">Find your <span>perfect dorm</span></h1>
+      <h1 class="hero-title">Find your <span class="grad">perfect dorm</span></h1>
       <p class="hero-subtitle">Search and book the best dormitories near your campus in Minglanilla.</p>
       
       <div class="search-bar-pill">
@@ -959,7 +974,7 @@
           <div class="detail-section-title">Property Owner</div>
           <div class="owner-contact-card">
             <div style="display: flex; align-items: center; gap: 12px;">
-              <div id="detOwnerInitials" style="width: 44px; height: 44px; background: #1b2d47; color: #ffffff; font-weight: 800; border-radius: 50%; display: flex; align-items: center; justify-content: center;">PO</div>
+              <div id="detOwnerInitials" style="width: 44px; height: 44px; background: #2563EB; color: #ffffff; font-weight: 800; border-radius: 50%; display: flex; align-items: center; justify-content: center;">PO</div>
               <div>
                 <h4 id="detOwnerName" style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">Property Owner</h4>
                 <p style="font-size: 0.78rem; color: #64748b;" id="detOwnerEmail">owner@dormfinder.com</p>
@@ -1114,9 +1129,20 @@
 
     (async function initBrowse() {
       const sessionUser = JSON.parse(localStorage.getItem('df_user') || 'null');
+
+      // ── Student redirect ──────────────────────────────────
+      // Students have their own Browse tab inside student-dashboard.html.
+      // Sending them there keeps both experiences in one place.
+      if (sessionUser && sessionUser.role === 'student') {
+        // Preserve any ?property=... deep-link so the dashboard can open it
+        const qs = window.location.search;
+        window.location.replace('student-dashboard.html' + qs);
+        return; // stop — page is navigating away
+      }
+
       if (sessionUser && sessionUser.name) {
         document.getElementById('navAuthLinks').innerHTML = `
-          <a href="${sessionUser.role === 'owner' ? 'owner-dashboard.html' : 'student-dashboard.html'}" class="btn-nav-signup" style="background: #314c75;">Dashboard (${sessionUser.name.split(' ')[0]})</a>
+          <a href="${sessionUser.role === 'owner' ? 'owner-dashboard.html' : 'student-dashboard.html'}" class="btn-nav-signup">Dashboard (${sessionUser.name.split(' ')[0]})</a>
         `;
       }
 

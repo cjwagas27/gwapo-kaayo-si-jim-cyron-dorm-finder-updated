@@ -8,585 +8,470 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    body {
-      background-color: #f8fafc;
-      color: #1e293b;
-      display: flex;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ── SIDEBAR ────────────────────────── */
-    .sidebar {
-      width: 260px;
-      background-color: #1b2d47;
-      color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: fixed;
-      top: 0; bottom: 0; left: 0;
-      z-index: 100;
-    }
-
-    .sidebar-top {
-      padding: 1.5rem 1.25rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: #ffffff;
-      text-decoration: none;
-      margin-bottom: 2rem;
-    }
-
-    .brand-mark {
-      width: 34px; height: 34px;
-      background: #314c75;
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-    }
-
-    .sidebar-section-title {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: rgba(255,255,255,0.4);
-      margin-bottom: 0.75rem;
-      font-weight: 700;
-    }
-
-    .sidebar-nav {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 1rem;
-      border-radius: 10px;
-      color: rgba(255,255,255,0.7);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      transition: all 0.2s;
-      cursor: pointer;
-      background: transparent;
-      border: none;
-      width: 100%;
-      text-align: left;
-    }
-
-    .nav-item span {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .nav-item:hover {
-      background-color: rgba(255,255,255,0.06);
-      color: #ffffff;
-    }
-
-    .nav-item.active {
-      background-color: #314c75;
-      color: #ffffff;
-      box-shadow: 0 4px 12px rgba(49, 76, 117, 0.3);
-    }
-
-    .badge {
-      background: rgba(255,255,255,0.15);
-      padding: 2px 7px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
-    }
-
-    .sidebar-bottom-nav {
-      padding: 1.25rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    /* ── MAIN CONTENT AREA ─────────────────────────────────── */
-    .main-content {
-      margin-left: 260px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    .topbar {
-      height: 70px;
-      background: #ffffff;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 0 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 90;
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
-
-    .icon-btn {
-      width: 38px; height: 38px;
-      border-radius: 10px;
-      border: 1px solid #e2e8f0;
-      background: #ffffff;
-      color: #64748b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .icon-btn:hover { background: #f8fafc; color: #1e293b; }
-
-    .user-profile-display {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .user-name {
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: #0f172a;
-    }
-
-    .dashboard-body {
-      padding: 2.25rem 2.5rem;
-      flex: 1;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: #f8fafc; color: #1e293b; display: flex; min-height: 100vh; overflow-x: hidden; }
+    .sidebar { width: 260px; background-color: #080F20; color: #ffffff; display: flex; flex-direction: column; justify-content: space-between; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; border-right: 1px solid rgba(203,213,225,0.07); }
+    .sidebar-top { padding: 1.5rem 1.25rem; flex: 1; display: flex; flex-direction: column; }
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 800; color: #ffffff; text-decoration: none; margin-bottom: 2rem; letter-spacing: -0.04em; }
+    .brand .gold { color: #FFC928; }
+    .brand-mark { width: 34px; height: 34px; background: #2563EB; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sidebar-section-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); margin-bottom: 0.75rem; font-weight: 700; }
+    .sidebar-nav { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .nav-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-radius: 10px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; cursor: pointer; background: transparent; border: none; width: 100%; text-align: left; }
+    .nav-item span { display: flex; align-items: center; gap: 10px; }
+    .nav-item:hover { background-color: rgba(255,255,255,0.06); color: #ffffff; }
+    .nav-item.active { background-color: rgba(37,99,235,0.18); color: #ffffff; border-left: 3px solid #2563EB; padding-left: calc(1rem - 3px); }
+    .badge { background: rgba(255,255,255,0.15); padding: 2px 7px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+    .sidebar-bottom-nav { padding: 1.25rem; border-top: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; gap: 4px; }
+    .main-content { margin-left: 260px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+    .topbar { height: 68px; background: #ffffff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; position: sticky; top: 0; z-index: 90; gap: 1rem; }
+    .topbar-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .topbar-page-title { font-size: 1rem; font-weight: 700; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .icon-btn { width: 38px; height: 38px; border-radius: 10px; border: 1px solid #e2e8f0; background: #ffffff; color: #64748b; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; position: relative; flex-shrink: 0; }
+    .icon-btn:hover { background: #f1f5f9; color: #0f172a; border-color: #cbd5e1; }
+    .user-profile-display { display: flex; align-items: center; gap: 9px; padding: 5px 10px 5px 5px; border-radius: 100px; border: 1px solid #e2e8f0; background: #fff; cursor: default; transition: background 0.15s; }
+    .user-profile-display:hover { background: #f8fafc; }
+    .user-avatar { width: 30px; height: 30px; border-radius: 50%; background: #2563EB; color: #fff; font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; letter-spacing: 0.03em; }
+    .user-name { font-size: 0.85rem; font-weight: 700; color: #0f172a; white-space: nowrap; }
+    .dashboard-body { padding: 2rem 2.5rem; flex: 1; background: #f8fafc; }
     .tab-view { display: none; }
     .tab-view.active { display: block; }
-
-    .dash-header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 2rem;
-    }
-
-    .dash-title-area p {
-      font-size: 0.82rem;
-      color: #64748b;
-      margin-bottom: 4px;
-      font-weight: 600;
-    }
-
-    .dash-title-area h1 {
-      font-size: 1.85rem;
-      font-weight: 800;
-      color: #0f172a;
-      letter-spacing: -0.02em;
-    }
-
-    .btn-find-dorm {
-      background: #314c75;
-      color: #ffffff;
-      border: none;
-      padding: 0.7rem 1.25rem;
-      border-radius: 10px;
-      font-size: 0.875rem;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(49, 76, 117, 0.25);
-      transition: background 0.2s, transform 0.1s;
-      text-decoration: none;
-    }
-
-    .btn-find-dorm:hover {
-      background: #263c5d;
-      transform: translateY(-1px);
-    }
-
-    /* ── PROFILE TAB STYLES ────────────────────────────────── */
-    .profile-card-box {
-      background: #132238;
-      border-radius: 16px;
-      padding: 2.5rem;
-      color: #ffffff;
-      max-width: 720px;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
-    }
-
-    .profile-avatar-row {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-      margin-bottom: 2rem;
-    }
-
-    .profile-avatar-info h4 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 4px;
-    }
-
-    .profile-avatar-info p {
-      font-size: 0.82rem;
-      color: rgba(255, 255, 255, 0.6);
-    }
-
-    .profile-form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    .profile-form-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 6px;
-    }
-
-    .profile-form-group input,
-    .profile-form-group textarea {
-      width: 100%;
-      background: #1b2d47;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 10px;
-      padding: 0.75rem 1rem;
-      font-size: 0.9rem;
-      color: #ffffff;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .profile-form-group input:focus,
-    .profile-form-group textarea:focus { border-color: #3b82f6; }
+    .welcome-banner { background: linear-gradient(135deg, #080F20 0%, #111B30 60%, #0D1829 100%); border-radius: 18px; padding: 2rem 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; margin-bottom: 1.75rem; border: 1px solid rgba(37,99,235,0.18); position: relative; overflow: hidden; }
+    .welcome-banner::before { content: ''; position: absolute; width: 320px; height: 320px; border-radius: 50%; background: radial-gradient(ellipse, rgba(37,99,235,0.14) 0%, transparent 70%); top: -80px; left: -60px; pointer-events: none; }
+    .welcome-text { position: relative; z-index: 1; }
+    .welcome-eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #FFC928; margin-bottom: 8px; display: flex; align-items: center; gap: 7px; }
+    .welcome-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #FFC928; flex-shrink: 0; }
+    .welcome-heading { font-size: 1.75rem; font-weight: 800; color: #ffffff; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 8px; }
+    .welcome-heading span { color: #FFC928; }
+    .welcome-desc { font-size: 0.875rem; color: rgba(203,213,225,0.75); line-height: 1.6; max-width: 420px; }
+    .btn-find-dorm { background: #2563EB; color: #ffffff; border: none; padding: 0.75rem 1.4rem; border-radius: 10px; font-size: 0.875rem; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; box-shadow: 0 4px 14px rgba(37,99,235,0.35); transition: background 0.15s, transform 0.15s; text-decoration: none; white-space: nowrap; flex-shrink: 0; position: relative; z-index: 1; }
+    .btn-find-dorm:hover { background: #1D4ED8; transform: translateY(-1px); }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
+    .stat-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.5rem 1.5rem 1.25rem; display: flex; flex-direction: column; position: relative; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s; overflow: hidden; }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); border-color: rgba(37,99,235,0.25); }
+    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: #2563EB; border-radius: 16px 16px 0 0; }
+    .stat-card.green::before  { background: #16A34A; }
+    .stat-card.yellow::before { background: #FFC928; }
+    .stat-card.blue::before   { background: #2563EB; }
+    .stat-icon-wrap { width: 42px; height: 42px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 1rem; margin-bottom: 1rem; flex-shrink: 0; }
+    .stat-icon-wrap.blue   { background: #EFF6FF; color: #2563EB; }
+    .stat-icon-wrap.green  { background: #DCFCE7; color: #16A34A; }
+    .stat-icon-wrap.yellow { background: rgba(255,201,40,0.12); color: #B45309; }
+    .stat-number { font-size: 2rem; font-weight: 800; color: #0f172a; line-height: 1; margin-bottom: 4px; letter-spacing: -0.02em; }
+    .stat-label { font-size: 0.875rem; font-weight: 700; color: #1e293b; margin-bottom: 3px; }
+    .stat-sub { font-size: 0.775rem; color: #94a3b8; font-weight: 500; }
+    .stat-arrow { position: absolute; bottom: 1.25rem; right: 1.5rem; color: #cbd5e1; font-size: 0.75rem; transition: color 0.15s, transform 0.15s; }
+    .stat-card:hover .stat-arrow { color: #2563EB; transform: translateX(3px); }
+    .section-header-flex { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; gap: 1rem; }
+    .section-title-sm h2 { font-size: 1.1rem; font-weight: 800; color: #0f172a; letter-spacing: -0.01em; }
+    .section-title-sm p { font-size: 0.8rem; color: #94a3b8; margin-top: 2px; }
+    .view-all-link { display: inline-flex; align-items: center; gap: 5px; font-size: 0.85rem; font-weight: 700; color: #2563EB; text-decoration: none; transition: color 0.15s; white-space: nowrap; flex-shrink: 0; }
+    .view-all-link:hover { color: #1D4ED8; }
+    .view-all-link i { font-size: 0.75rem; }
+    .dorms-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    .dorm-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s; display: flex; flex-direction: column; cursor: pointer; }
+    .dorm-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.09); border-color: rgba(37,99,235,0.3); }
+    .dorm-img-wrap { height: 175px; position: relative; background-size: cover; background-position: center; overflow: hidden; }
+    .dorm-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+    .dorm-card:hover .dorm-img-wrap img { transform: scale(1.04); }
+    .dorm-status-badge { position: absolute; top: 10px; left: 10px; padding: 3px 9px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; backdrop-filter: blur(4px); }
+    .dorm-status-badge.available { background: rgba(22,163,74,0.9); color: #ffffff; }
+    .dorm-status-badge.reserved  { background: rgba(217,119,6,0.9); color: #ffffff; }
+    .dorm-status-badge.taken     { background: rgba(100,116,139,0.85); color: #ffffff; }
+    .dorm-fav-btn { position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; background: #ffffff; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; color: #94a3b8; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: color 0.15s, background 0.15s; font-size: 0.85rem; }
+    .dorm-fav-btn:hover { color: #ef4444; }
+    .dorm-fav-btn.favorited { color: #ef4444; background: #fff1f2; }
+    .dorm-fav-btn.favorited i { font-weight: 900; }
+    .dorm-compare-btn { position: absolute; left: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 20px; border: none; cursor: pointer; background: rgba(255,255,255,0.95); color: #2563EB; font: 700 0.72rem 'Plus Jakarta Sans', sans-serif; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: background 0.15s, color 0.15s; }
+    .dorm-compare-btn:hover  { background: #dbeafe; color: #1d4ed8; }
+    .dorm-compare-btn.active { background: #2563EB; color: #ffffff; }
+    .btn-view-dorm { padding: 6px 13px; background: #2563EB; color: #ffffff; border: none; border-radius: 8px; font-size: 0.775rem; font-weight: 700; cursor: pointer; transition: background 0.15s; flex-shrink: 0; }
+    .btn-view-dorm:hover { background: #1D4ED8; }
+    .dorm-content { padding: 1rem 1.1rem 1.1rem; display: flex; flex-direction: column; flex: 1; gap: 6px; }
+    .dorm-top-info { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .dorm-name { font-size: 1rem; font-weight: 800; color: #0f172a; line-height: 1.3; flex: 1; min-width: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; letter-spacing: -0.01em; text-transform: capitalize; }
+    .dorm-rating { font-size: 0.78rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 3px; white-space: nowrap; flex-shrink: 0; }
+    .dorm-rating i { color: #FFC928; font-size: 0.72rem; }
+    .dorm-type-chip { display: inline-block; padding: 2px 9px; border-radius: 20px; background: #EFF6FF; color: #2563EB; font-size: 0.7rem; font-weight: 700; width: fit-content; }
+    .dorm-location { font-size: 0.8rem; color: #64748b; display: flex; align-items: center; gap: 4px; }
+    .dorm-location i { font-size: 0.72rem; color: #94a3b8; }
+    .dorm-footer-info { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #f1f5f9; padding-top: 10px; margin-top: auto; gap: 8px; }
+    .dorm-price { font-size: 1rem; font-weight: 800; color: #FFC928; line-height: 1; }
+    .dorm-price span { font-size: 0.72rem; font-weight: 500; color: #94a3b8; }
+    .dorm-total { font-size: 0.68rem; font-weight: 600; color: #2563EB; margin-top: 2px; }
+    .empty-state-card { grid-column: 1 / -1; background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 20px; padding: 5rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .empty-icon-circle { width: 56px; height: 56px; background: #f1f5f9; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: #2563EB; font-size: 1.25rem; margin-bottom: 1rem; }
+    .empty-state-card h3 { font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+    .empty-state-card p { font-size: 0.875rem; line-height: 1.6; max-width: 340px; margin: 0 auto 1.25rem; }
+    .dash-header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; gap: 1rem; flex-wrap: wrap; }
+    .dash-title-area p { font-size: 0.78rem; color: #94a3b8; margin-bottom: 3px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+    .dash-title-area h1 { font-size: 1.75rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; }
+    .profile-card-box { background: #111B30; border-radius: 16px; padding: 2.5rem; color: #ffffff; max-width: 720px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .profile-avatar-row { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 2rem; }
+    .profile-avatar-info h4 { font-size: 1.05rem; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+    .profile-avatar-info p { font-size: 0.82rem; color: rgba(255,255,255,0.6); }
+    .profile-form-group { margin-bottom: 1.25rem; }
+    .profile-form-group label { display: block; font-size: 0.85rem; font-weight: 700; color: #ffffff; margin-bottom: 6px; }
+    .profile-form-group input, .profile-form-group textarea { width: 100%; background: #0D1829; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.9rem; color: #ffffff; outline: none; transition: border-color 0.2s; }
+    .profile-form-group input:focus, .profile-form-group textarea:focus { border-color: #3b82f6; }
     .profile-form-group textarea { resize: vertical; min-height: 90px; }
-
-    .btn-save-profile {
-      background: #2563eb;
-      color: #ffffff;
-      border: none;
-      width: 100%;
-      padding: 0.85rem;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 1rem;
-      transition: background 0.2s;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-    }
-
+    .btn-save-profile { background: #2563eb; color: #ffffff; border: none; width: 100%; padding: 0.85rem; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; margin-top: 1rem; transition: background 0.2s; box-shadow: 0 4px 12px rgba(37,99,235,0.25); }
     .btn-save-profile:hover { background: #1d4ed8; }
-
-    /* MINGLANILLA SEARCH HERO BANNER */
-    .search-hero-card {
-      background: #18283f;
-      border-radius: 20px;
-      padding: 2.5rem 2rem;
-      text-align: center;
-      color: #ffffff;
-      margin-bottom: 2rem;
-      box-shadow: 0 12px 30px rgba(24, 40, 63, 0.2);
-    }
-
-    .search-hero-title {
-      font-size: 2rem;
-      font-weight: 800;
-      margin-bottom: 8px;
-      letter-spacing: -0.02em;
-    }
-
-    .search-hero-title span { color: #f59e0b; }
-
-    .search-hero-subtitle {
-      font-size: 0.95rem;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 1.8rem;
-    }
-
-    .search-bar-pill {
-      background: #f1f5f9;
-      border-radius: 50px;
-      padding: 6px 8px 6px 20px;
-      display: flex;
-      align-items: center;
-      max-width: 900px;
-      margin: 0 auto 1.5rem auto;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    }
-
-    .sb-input-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1;
-      padding-right: 15px;
-    }
-
+    .search-hero-card { background: #111B30; border-radius: 0; padding: 2.5rem 2rem; text-align: center; color: #ffffff; margin: -2.25rem -2.5rem 2rem -2.5rem; border-bottom: 1px solid rgba(203,213,225,0.07); }
+    .search-hero-title { font-size: 2rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.03em; }
+    .search-hero-title .grad { background: linear-gradient(135deg, #FFC928 0%, #FFAA00 40%, #60A5FA 80%, #2563EB 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 12px rgba(255,201,40,0.4)) drop-shadow(0 0 24px rgba(37,99,235,0.25)); }
+    .search-hero-subtitle { font-size: 0.95rem; color: rgba(255,255,255,0.7); margin-bottom: 1.8rem; }
+    .search-bar-pill { background: #ffffff; border-radius: 50px; padding: 6px 8px 6px 20px; display: flex; align-items: center; max-width: 900px; margin: 0 auto 1.5rem auto; box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
+    .sb-input-group { display: flex; align-items: center; gap: 12px; flex: 1; padding-right: 15px; }
     .sb-input-group i { color: #64748b; font-size: 1rem; }
-
-    .sb-input-group input {
-      border: none;
-      background: transparent;
-      outline: none;
-      width: 100%;
-      font-size: 0.92rem;
-      color: #0f172a;
-      font-weight: 500;
-    }
-
+    .sb-input-group input { border: none; background: transparent; outline: none; width: 100%; font-size: 0.92rem; color: #0f172a; font-weight: 500; }
     .sb-divider { width: 1px; height: 28px; background: #cbd5e1; }
     .sb-select-group { padding: 0 15px; }
+    .sb-select-group select { border: none; background: transparent; outline: none; font-size: 0.88rem; color: #475569; font-weight: 600; cursor: pointer; }
+    .sb-btn-search { background: #2563eb; color: #ffffff; border: none; padding: 0.75rem 1.75rem; border-radius: 40px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+    .sb-btn-search:hover { background: #1d4ed8; transform: translateY(-1px); }
 
-    .sb-select-group select {
+    /* ── BROWSE TAB REDESIGN ─────────────────────────────── */
+    .browse-search-section {
+      background: #111B30;
+      margin: -2rem -2.5rem 0 -2.5rem;
+      padding: 2rem 2.5rem 1.5rem;
+      border-bottom: 1px solid rgba(203,213,225,0.08);
+    }
+
+    /* ── BROWSE TAB TYPOGRAPHY IMPROVEMENTS ─────────────── */
+    .browse-search-heading { margin-bottom: 1.4rem; }
+
+    .browse-heading {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .browse-subheading {
+      font-size: 0.9rem;
+      color: rgba(203,213,225,0.7);
+      line-height: 1.6;
+      max-width: 520px;
+    }
+
+    /* Main search bar */
+    .browse-searchbar {
+      display: flex;
+      align-items: center;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 6px 8px 6px 16px;
+      gap: 0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      margin-bottom: 1rem;
+    }
+
+    .bsb-input {
+      flex: 1.8;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      padding-right: 12px;
+    }
+
+    .bsb-icon { color: #94a3b8; font-size: 0.875rem; flex-shrink: 0; }
+
+    .bsb-input input {
+      flex: 1;
       border: none;
       background: transparent;
       outline: none;
-      font-size: 0.88rem;
-      color: #475569;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .sb-btn-search {
-      background: #2563eb;
-      color: #ffffff;
-      border: none;
-      padding: 0.75rem 1.75rem;
-      border-radius: 40px;
       font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      color: #0f172a;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 500;
+      min-width: 0;
+    }
+    .bsb-input input::placeholder { color: #94a3b8; }
+
+    .bsb-divider {
+      width: 1px;
+      height: 26px;
+      background: #e2e8f0;
+      flex-shrink: 0;
+      margin: 0 4px;
     }
 
-    .sb-btn-search:hover { background: #1d4ed8; transform: translateY(-1px); }
-
-    .search-tags-row {
+    .bsb-select {
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 8px;
+      padding: 0 12px;
+      flex: 1;
+      min-width: 0;
+    }
+    .bsb-select select {
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 0.875rem;
+      color: #334155;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .bsb-btn {
+      background: #2563EB;
+      color: #fff;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 9px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background 0.15s, transform 0.15s;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .bsb-btn:hover { background: #1D4ED8; transform: translateY(-1px); }
+
+    /* Filter rows */
+    .browse-filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .browse-filter-row:last-child { margin-bottom: 0; }
+
+    .browse-filter-group {
+      display: flex;
+      align-items: center;
       gap: 10px;
       flex-wrap: wrap;
     }
 
-    .tag-pill {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      color: rgba(255, 255, 255, 0.85);
-      padding: 6px 16px;
-      border-radius: 30px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
+    .browse-filter-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: rgba(203,213,225,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .browse-filter-label i { font-size: 0.7rem; }
+
+    /* Location tag pills (overrides existing .tag-pill for browse) */
+    #tab-browse .search-tags-row { justify-content: flex-start; }
+    #tab-browse .tag-pill {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.75);
+      padding: 5px 14px;
+      font-size: 0.8rem;
+    }
+    #tab-browse .tag-pill:hover,
+    #tab-browse .tag-pill.active {
+      background: #2563EB;
+      border-color: #2563EB;
+      color: #fff;
+    }
+
+    /* Amenity chips */
+    .amenity-chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .amenity-chip {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s;
-      text-decoration: none;
+      padding: 6px 13px;
+      border-radius: 100px;
+      border: 1.5px solid rgba(203,213,225,0.2);
+      background: rgba(255,255,255,0.05);
+      color: rgba(203,213,225,0.75);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: all 0.15s;
+      white-space: nowrap;
     }
-
-    .tag-pill:hover, .tag-pill.active {
-      background: rgba(255, 255, 255, 0.22);
-      border-color: #ffffff;
+    .amenity-chip i { font-size: 0.75rem; }
+    .amenity-chip:hover {
+      border-color: #2563EB;
+      color: #fff;
+      background: rgba(37,99,235,0.15);
+    }
+    .amenity-chip.active {
+      background: #2563EB;
+      border-color: #2563EB;
       color: #ffffff;
     }
-
-    /* Stat Cards Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-      margin-bottom: 2rem;
+    .amenity-chip.active:hover {
+      background: #1D4ED8;
+      border-color: #1D4ED8;
     }
 
-    .stat-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-
-    .stat-number {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 2px;
-    }
-
-    .stat-label {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 4px;
-    }
-
-    .stat-sub { font-size: 0.8rem; color: #64748b; }
-
-    .stat-icon-badge {
-      position: absolute;
-      top: 1.5rem; right: 1.5rem;
-      width: 36px; height: 36px;
-      background: #f1f5f9;
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      color: #314c75;
-      font-size: 0.95rem;
-    }
-
-    .section-header-flex {
+    /* Results header */
+    .browse-results-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 1.25rem;
+      padding: 1.25rem 0 1rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+      border-top: 1px solid #e2e8f0;
+      margin-top: 1px;
     }
 
-    .section-title-sm h2 {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    .section-title-sm p { font-size: 0.8rem; color: #64748b; }
-
-    .view-all-link {
-      font-size: 0.875rem;
-      font-weight: 700;
-      color: #314c75;
-      text-decoration: none;
-    }
-    .view-all-link:hover { text-decoration: underline; }
-
-    /* Dorm Cards Grid */
-    .dorms-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
-
-    .dorm-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      overflow: hidden;
-      transition: transform 0.2s, box-shadow 0.2s;
+    .browse-results-left {
       display: flex;
-      flex-direction: column;
-      cursor: pointer;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      min-width: 0;
     }
 
-    .dorm-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-    }
-
-    .dorm-img-wrap {
-      height: 180px;
-      position: relative;
-      background-size: cover;
-      background-position: center;
-    }
-
-    .dorm-status-badge {
-      position: absolute;
-      top: 12px; left: 12px;
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(4px);
-      color: #ffffff;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.72rem;
+    .browse-results-count {
+      font-size: 1rem;
       font-weight: 700;
+      color: #0f172a;
+      white-space: nowrap;
     }
 
-    .dorm-fav-btn {
-      position: absolute;
-      top: 12px; right: 12px;
-      width: 32px; height: 32px;
-      background: #ffffff;
-      border-radius: 50%;
-      border: none;
-      display: flex; align-items: center; justify-content: center;
-      color: #64748b;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      transition: all 0.2s;
+    .browse-active-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
     }
-    /* ── REVIEWS & RECOMMENDATIONS ───────────────────────── */
+
+    .browse-active-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #2563EB;
+    }
+    .browse-active-tag button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #93C5FD;
+      font-size: 0.65rem;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s;
+    }
+    .browse-active-tag button:hover { color: #2563EB; }
+
+    .browse-results-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .browse-sort-select {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #334155;
+      background: #fff;
+      outline: none;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: border-color 0.15s;
+    }
+    .browse-sort-select:focus { border-color: #2563EB; }
+
+    .browse-reset-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 13px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #fff;
+      color: #64748b;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: all 0.15s;
+    }
+    .browse-reset-btn:hover {
+      border-color: #2563EB;
+      color: #2563EB;
+      background: #EFF6FF;
+    }
+
+    /* Browse tab responsive */
+    @media (max-width: 860px) {
+      .browse-search-section { margin: -2rem -1.25rem 0 -1.25rem; padding: 1.5rem 1.25rem 1.25rem; }
+      .browse-searchbar { flex-wrap: wrap; gap: 6px; padding: 10px 12px; }
+      .bsb-input { flex: 1 1 100%; padding-right: 0; }
+      .bsb-divider { display: none; }
+      .bsb-select { flex: 1 1 calc(50% - 4px); padding: 0; }
+      .bsb-btn { flex: 1 1 100%; justify-content: center; border-radius: 9px; }
+    }
+
+    @media (max-width: 640px) {
+      .browse-heading { font-size: 1.35rem; }
+      .browse-results-header { flex-direction: column; align-items: flex-start; }
+      .browse-filter-label { display: none; }
+    }
+    .search-tags-row { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .tag-pill { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); color: rgba(255,255,255,0.85); padding: 6px 16px; border-radius: 30px; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; text-decoration: none; }
+    .tag-pill:hover, .tag-pill.active { background: rgba(255,255,255,0.22); border-color: #ffffff; color: #ffffff; }
     .rv-section { margin-top: 0.5rem; }
     .rv-tabs { display: flex; gap: 1.75rem; border-bottom: 1px solid #e2e8f0; margin-bottom: 1.25rem; }
-    .rv-tab {
-      background: none; border: none; cursor: pointer; padding: 0 0 0.8rem; margin-bottom: -1px;
-      font: 700 0.95rem 'Plus Jakarta Sans', sans-serif; color: #475569;
-      border-bottom: 3px solid transparent;
-    }
+    .rv-tab { background: none; border: none; cursor: pointer; padding: 0 0 0.8rem; margin-bottom: -1px; font: 700 0.95rem 'Plus Jakarta Sans', sans-serif; color: #475569; border-bottom: 3px solid transparent; }
     .rv-tab:hover { color: #0f172a; }
     .rv-tab.active { color: #2563eb; border-bottom-color: #2563eb; }
     .rv-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
     .rv-h { font-size: 1.15rem; font-weight: 800; color: #0f172a; }
-    .rv-sort {
-      padding: 0.5rem 0.8rem; border: 1px solid #e2e8f0; border-radius: 10px; background: #ffffff;
-      font: 600 0.82rem 'Plus Jakarta Sans', sans-serif; color: #334155; cursor: pointer; outline: none;
-    }
-    .rv-summary {
-      display: flex; gap: 1.75rem; align-items: center; flex-wrap: wrap;
-      background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem;
-    }
+    .rv-sort { padding: 0.5rem 0.8rem; border: 1px solid #e2e8f0; border-radius: 10px; background: #ffffff; font: 600 0.82rem 'Plus Jakarta Sans', sans-serif; color: #334155; cursor: pointer; outline: none; }
+    .rv-summary { display: flex; gap: 1.75rem; align-items: center; flex-wrap: wrap; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; }
     .rv-score { text-align: center; min-width: 120px; }
     .rv-score .n { font-size: 2.4rem; font-weight: 800; color: #0f172a; line-height: 1; }
     .rv-score .n span { font-size: 1rem; font-weight: 600; color: #94a3b8; }
     .rv-score .sub { font-size: 0.78rem; color: #64748b; margin-top: 6px; font-weight: 600; }
     .rv-score .rec { font-size: 0.78rem; color: #15803d; font-weight: 800; margin-top: 3px; }
-    .rv-stars { display: inline-flex; gap: 2px; font-size: 1rem; letter-spacing: 0; }
+    .rv-stars { display: inline-flex; gap: 2px; font-size: 1rem; }
     .rv-stars span { color: #e2e8f0; }
     .rv-stars span.on { color: #f59e0b; }
     .rv-stars.big { font-size: 1.3rem; margin-top: 6px; }
     .rv-chips { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
-    .rv-chip {
-      background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.45rem 0.85rem; cursor: pointer;
-      font: 600 0.82rem 'Plus Jakarta Sans', sans-serif; color: #475569; transition: all 0.15s;
-    }
+    .rv-chip { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.45rem 0.85rem; cursor: pointer; font: 600 0.82rem 'Plus Jakarta Sans', sans-serif; color: #475569; transition: all 0.15s; }
     .rv-chip:hover { border-color: #2563eb; color: #2563eb; }
     .rv-chip.active { border-color: #2563eb; background: #eff6ff; color: #2563eb; }
     .rv-chip.zero { opacity: 0.55; }
     .rv-summary.empty { color: #64748b; font-size: 0.9rem; }
-
     .rv-form-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.5rem; }
     .rv-form-title { font-size: 0.95rem; font-weight: 800; color: #0f172a; margin-bottom: 0.6rem; }
     .rv-star-row { display: flex; align-items: center; gap: 12px; margin-bottom: 0.8rem; }
@@ -595,12 +480,8 @@
     .rv-star-input button.on { color: #f59e0b; }
     .rv-star-input button:hover { transform: scale(1.15); }
     #rvStarLabel { font-size: 0.82rem; font-weight: 700; color: #64748b; }
-    .rv-form-card textarea {
-      width: 100%; min-height: 88px; resize: vertical; padding: 0.8rem 0.95rem;
-      border: 1px solid #e2e8f0; border-radius: 12px; outline: none;
-      font: 500 0.9rem 'Plus Jakarta Sans', sans-serif; color: #1e293b;
-    }
-    .rv-form-card textarea:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); }
+    .rv-form-card textarea { width: 100%; min-height: 88px; resize: vertical; padding: 0.8rem 0.95rem; border: 1px solid #e2e8f0; border-radius: 12px; outline: none; font: 500 0.9rem 'Plus Jakarta Sans', sans-serif; color: #1e293b; }
+    .rv-form-card textarea:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.12); }
     .rv-form-bottom { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: 0.8rem; }
     .rv-rec-check { display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #334155; cursor: pointer; }
     .rv-rec-check input { width: 16px; height: 16px; accent-color: #2563eb; cursor: pointer; }
@@ -611,7 +492,6 @@
     .rv-del { background: #ffffff; color: #dc2626; border: 1px solid #fecaca; border-radius: 10px; padding: 0.65rem 1.1rem; font: 700 0.86rem 'Plus Jakarta Sans', sans-serif; cursor: pointer; }
     .rv-note { display: flex; gap: 10px; align-items: center; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 14px; padding: 1rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.88rem; color: #475569; }
     .rv-note a { color: #2563eb; font-weight: 800; text-decoration: none; }
-
     .rv-item { display: flex; gap: 0.9rem; padding: 1.1rem 0; border-bottom: 1px solid #f1f5f9; }
     .rv-item:last-child { border-bottom: none; }
     .rv-avatar { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.95rem; }
@@ -630,11 +510,10 @@
     .rv-more { display: block; margin: 0.75rem auto 0; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 0.6rem 1.4rem; font: 700 0.85rem 'Plus Jakarta Sans', sans-serif; color: #334155; cursor: pointer; }
     .rv-more:hover { border-color: #2563eb; color: #2563eb; }
     .rv-loading, .rv-none { text-align: center; padding: 2rem 1rem; color: #64748b; font-size: 0.9rem; }
-
     .rec-intro { font-size: 0.9rem; color: #64748b; margin-bottom: 1rem; }
     .rec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
     .rec-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s; }
-    .rec-card:hover { border-color: #2563eb; box-shadow: 0 8px 22px rgba(37, 99, 235, 0.12); transform: translateY(-2px); }
+    .rec-card:hover { border-color: #2563eb; box-shadow: 0 8px 22px rgba(37,99,235,0.12); transform: translateY(-2px); }
     .rec-img { position: relative; height: 130px; background-size: cover; background-position: center; background-color: #e2e8f0; }
     .rec-body { padding: 0.9rem 1rem 1rem; display: flex; flex-direction: column; gap: 6px; flex: 1; }
     .rec-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -647,73 +526,25 @@
     .rec-price { margin-top: auto; padding-top: 6px; font-weight: 800; color: #0f172a; font-size: 1rem; }
     .rec-price small { font-size: 0.75rem; font-weight: 500; color: #64748b; }
     @media (max-width: 800px) { .rec-grid { grid-template-columns: 1fr; } }
-
-    .dorm-compare-btn {
-      position: absolute; left: 12px; bottom: 12px;
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 12px; border-radius: 20px; border: none; cursor: pointer;
-      background: rgba(255,255,255,0.95); color: #314c75;
-      font: 700 0.74rem 'Plus Jakarta Sans', sans-serif;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.18);
-      transition: background 0.2s, color 0.2s;
-    }
-    .dorm-compare-btn:hover { background: #dbeafe; color: #1d4ed8; }
-    .dorm-compare-btn.active { background: #2563eb; color: #ffffff; }
-
-    /* ── COMPARE TOOL ───────────────────────────────────── */
-    .compare-tray {
-      position: fixed; bottom: 20px; left: calc(50% + 130px);
-      transform: translate(-50%, 160%);
-      z-index: 900; max-width: calc(100vw - 320px);
-      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-      background: #0f172a; color: #ffffff;
-      border-radius: 18px; padding: 10px 14px 10px 16px;
-      box-shadow: 0 12px 32px rgba(15, 23, 42, 0.35);
-      transition: transform 0.3s ease;
-    }
+    .compare-tray { position: fixed; bottom: 20px; left: calc(50% + 130px); transform: translate(-50%, 160%); z-index: 900; max-width: calc(100vw - 320px); display: flex; align-items: center; gap: 14px; flex-wrap: wrap; background: #0f172a; color: #ffffff; border-radius: 18px; padding: 10px 14px 10px 16px; box-shadow: 0 12px 32px rgba(15,23,42,0.35); transition: transform 0.3s ease; }
     .compare-tray.show { transform: translate(-50%, 0); }
     .tray-thumbs { display: flex; gap: 8px; }
-    .tray-thumb {
-      position: relative; width: 42px; height: 42px; border-radius: 10px;
-      background-size: cover; background-position: center; background-color: #334155;
-      border: 2px solid rgba(255,255,255,0.25);
-    }
-    .tray-thumb button {
-      position: absolute; top: -7px; right: -7px; width: 18px; height: 18px;
-      border-radius: 50%; border: none; background: #ef4444; color: #fff;
-      font-size: 0.6rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    }
+    .tray-thumb { position: relative; width: 42px; height: 42px; border-radius: 10px; background-size: cover; background-position: center; background-color: #334155; border: 2px solid rgba(255,255,255,0.25); }
+    .tray-thumb button { position: absolute; top: -7px; right: -7px; width: 18px; height: 18px; border-radius: 50%; border: none; background: #ef4444; color: #fff; font-size: 0.6rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .tray-thumb.empty { border-style: dashed; background: transparent; }
     .tray-text { font-size: 0.82rem; font-weight: 600; color: #cbd5e1; }
-    .tray-btn {
-      border: none; border-radius: 10px; padding: 0.6rem 1.1rem; cursor: pointer;
-      font: 700 0.85rem 'Plus Jakarta Sans', sans-serif;
-      background: #2563eb; color: #ffffff;
-    }
+    .tray-btn { border: none; border-radius: 10px; padding: 0.6rem 1.1rem; cursor: pointer; font: 700 0.85rem 'Plus Jakarta Sans', sans-serif; background: #2563eb; color: #ffffff; }
     .tray-btn:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; }
     .tray-clear { background: none; border: none; color: #94a3b8; font: 600 0.8rem 'Plus Jakarta Sans', sans-serif; cursor: pointer; }
     .tray-clear:hover { color: #ffffff; }
     @media (max-width: 900px) { .compare-tray { left: 50%; max-width: calc(100vw - 24px); } }
-
-    .cmp-toast {
-      position: fixed; bottom: 90px; left: calc(50% + 130px); transform: translateX(-50%);
-      background: #0f172a; color: #fff; padding: 0.7rem 1.1rem; border-radius: 10px;
-      font-size: 0.85rem; font-weight: 600; z-index: 950;
-      opacity: 0; pointer-events: none; transition: opacity 0.25s;
-    }
+    .cmp-toast { position: fixed; bottom: 90px; left: calc(50% + 130px); transform: translateX(-50%); background: #0f172a; color: #fff; padding: 0.7rem 1.1rem; border-radius: 10px; font-size: 0.85rem; font-weight: 600; z-index: 950; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
     .cmp-toast.show { opacity: 1; }
-
     .cmp-slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
-    .cmp-slot {
-      background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 0.9rem;
-      display: flex; align-items: center; gap: 0.85rem; min-height: 84px;
-    }
+    .cmp-slot { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 0.9rem; display: flex; align-items: center; gap: 0.85rem; min-height: 84px; }
     .cmp-slot.empty { border-style: dashed; border-color: #cbd5e1; background: #f8fafc; flex-direction: column; align-items: stretch; justify-content: center; gap: 0.5rem; }
     .cmp-slot .s-label { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #94a3b8; }
-    .cmp-slot select {
-      width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #cbd5e1; border-radius: 10px;
-      font: 600 0.85rem 'Plus Jakarta Sans', sans-serif; color: #1e293b; background: #ffffff; outline: none;
-    }
+    .cmp-slot select { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #cbd5e1; border-radius: 10px; font: 600 0.85rem 'Plus Jakarta Sans', sans-serif; color: #1e293b; background: #ffffff; outline: none; }
     .cmp-slot select:focus { border-color: #2563eb; }
     .cmp-slot .s-img { width: 58px; height: 58px; border-radius: 12px; background-size: cover; background-position: center; background-color: #e2e8f0; flex-shrink: 0; }
     .cmp-slot .s-info { flex: 1; min-width: 0; }
@@ -721,17 +552,12 @@
     .cmp-slot .s-price { font-size: 0.82rem; color: #2563eb; font-weight: 700; }
     .cmp-slot .s-remove { background: #f1f5f9; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; color: #64748b; flex-shrink: 0; }
     .cmp-slot .s-remove:hover { background: #fee2e2; color: #dc2626; }
-
-    .cmp-summary {
-      background: linear-gradient(135deg, #eff6ff, #f0fdf4);
-      border: 1px solid #bfdbfe; border-radius: 16px; padding: 1.1rem 1.25rem; margin-bottom: 1.25rem;
-    }
+    .cmp-summary { background: linear-gradient(135deg, #eff6ff, #f0fdf4); border: 1px solid #bfdbfe; border-radius: 16px; padding: 1.1rem 1.25rem; margin-bottom: 1.25rem; }
     .cmp-summary h3 { font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; }
     .cmp-summary ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
     .cmp-summary li { font-size: 0.88rem; color: #334155; display: flex; gap: 8px; align-items: flex-start; }
     .cmp-summary li i { color: #16a34a; margin-top: 3px; }
     .cmp-verdict { margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid #dbeafe; font-size: 0.9rem; font-weight: 700; color: #1e3a8a; }
-
     .cmp-toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem; }
     .cmp-toggle { display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 600; color: #475569; cursor: pointer; }
     .cmp-toggle input { accent-color: #2563eb; width: 16px; height: 16px; cursor: pointer; }
@@ -759,56 +585,9 @@
     .cmp-empty { background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 20px; padding: 3rem 2rem; text-align: center; color: #64748b; }
     .cmp-empty i { font-size: 2rem; color: #94a3b8; margin-bottom: 0.75rem; display: block; }
     .cmp-empty h3 { color: #0f172a; font-size: 1.05rem; font-weight: 800; margin-bottom: 4px; }
-    .cmp-detail-btn {
-      display: inline-flex; align-items: center; gap: 7px; margin-top: 10px;
-      padding: 0.5rem 1rem; border-radius: 10px; border: 1px solid #bfdbfe; cursor: pointer;
-      background: #eff6ff; color: #2563eb; font: 700 0.82rem 'Plus Jakarta Sans', sans-serif;
-    }
+    .cmp-detail-btn { display: inline-flex; align-items: center; gap: 7px; margin-top: 10px; padding: 0.5rem 1rem; border-radius: 10px; border: 1px solid #bfdbfe; cursor: pointer; background: #eff6ff; color: #2563eb; font: 700 0.82rem 'Plus Jakarta Sans', sans-serif; }
     .cmp-detail-btn.active { background: #2563eb; color: #ffffff; border-color: #2563eb; }
     @media (max-width: 800px) { .cmp-slots { grid-template-columns: 1fr; } }
-
-    .dorm-fav-btn:hover { color: #ef4444; }
-    .dorm-fav-btn.favorited { color: #ef4444; background: #fff1f2; }
-    .dorm-fav-btn.favorited i { font-weight: 900; }
-
-    .dorm-content {
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      justify-content: space-between;
-    }
-
-    .dorm-top-info {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-
-    .dorm-name { font-size: 1rem; font-weight: 800; color: #0f172a; }
-
-    .dorm-rating {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #0f172a;
-      display: flex; align-items: center; gap: 3px;
-    }
-    .dorm-rating i { color: #f59e0b; font-size: 0.75rem; }
-
-    .dorm-location { font-size: 0.82rem; color: #64748b; margin-bottom: 1rem; }
-
-    .dorm-footer-info {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-top: 1px solid #f1f5f9;
-      padding-top: 0.85rem;
-      font-size: 0.82rem;
-      color: #64748b;
-    }
-
-    /* ── AMENITY PRICES (free / paid) ─────────────────────── */
     .am-tag { margin-left: auto; font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
     .am-tag.free { background: #dcfce7; color: #15803d; }
     .am-tag.paid { background: #fef3c7; color: #b45309; }
@@ -819,255 +598,82 @@
     .price-breakdown .pb-row.total { border-top: 1px dashed #cbd5e1; margin-top: 6px; padding-top: 8px; font-size: 0.95rem; }
     .price-breakdown .pb-row.total b { color: #2563eb; font-size: 1.05rem; }
     .price-breakdown .pb-free { font-size: 0.76rem; color: #15803d; font-weight: 700; margin-top: 6px; }
-    .dorm-total { font-size: 0.68rem; font-weight: 700; color: #2563eb; margin-top: 2px; text-align: right; }
-
-    .dorm-price { font-size: 1rem; font-weight: 800; color: #0f172a; }
-    .dorm-price span { font-size: 0.75rem; font-weight: 500; color: #64748b; }
-
-    /* ── STUDENT DORM DETAIL VIEW STYLES ───────────────────── */
-    #tab-dorm-detail { max-width: 1150px; margin: 0 auto; }
-
-    .btn-back-browse {
-      background: #f8fafc;
-      border: 1px solid #cbd5e1;
-      color: #0f172a;
-      padding: 0.55rem 1.2rem;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 1.5rem;
-    }
-
-    .detail-gallery {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 12px;
-      margin-bottom: 2rem;
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .detail-main-img { height: 340px; background-size: cover; background-position: center; border-radius: 14px; }
-    .detail-side-imgs { display: flex; flex-direction: column; gap: 12px; }
-    .detail-sub-img { height: 164px; background-size: cover; background-position: center; border-radius: 14px; position: relative; }
-
-    .detail-layout-grid {
-      display: grid;
-      grid-template-columns: 2fr 1.2fr;
-      gap: 2rem;
-    }
-
-    .detail-left-col { display: flex; flex-direction: column; gap: 1.75rem; }
-    .detail-title-row h1 { font-size: 2rem; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
-
-    .detail-badges-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 0.85rem;
-      color: #64748b;
-      font-weight: 600;
-    }
-
-    .badge-type { background: #eff6ff; color: #2563eb; padding: 4px 10px; border-radius: 6px; font-weight: 700; }
-    .detail-desc-box { font-size: 0.95rem; color: #334155; line-height: 1.5; }
-    .detail-section-title { font-size: 1.1rem; font-weight: 800; color: #0f172a; margin-bottom: 0.85rem; display: flex; align-items: center; gap: 8px; }
-
-    .detail-amenities-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-
-    .detail-amenity-pill {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 0.7rem 1rem;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #334155;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .detail-rules-box {
-      background: #fffbeb;
-      border: 1px solid #fde68a;
-      border-radius: 12px;
-      padding: 1rem 1.25rem;
-      color: #92400e;
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
-    /* FULL WIDTH MAP WIDGET STYLES */
-    .detail-map-box {
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid #e2e8f0;
-      height: 280px;
-      width: 100%;
-      position: relative;
-      margin-top: 0.5rem;
-    }
-    .btn-open-maps {
-      position: absolute;
-      bottom: 12px; right: 12px;
-      background: #ffffff;
-      color: #0f172a;
-      border: 1px solid #cbd5e1;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-decoration: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .owner-contact-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      padding: 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .btn-msg-owner {
-      background: #f8fafc;
-      border: 1px solid #cbd5e1;
-      color: #0f172a;
-      padding: 0.65rem 1.25rem;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.2s;
-    }
-    .btn-msg-owner:hover { background: #f1f5f9; }
-
-    /* RIGHT COLUMN: BOOKING CARD & ROOM SELECTION */
-    .detail-booking-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 20px;
-      padding: 1.75rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-      height: fit-content;
-      position: sticky;
-      top: 90px;
-    }
-
+    /* ── PROPERTY DETAIL VIEW — REDESIGNED ───────────────── */
+    #tab-dorm-detail { max-width: 1200px; margin: 0 auto; }
+    .btn-back-browse { background: #f8fafc; border: 1px solid #e2e8f0; color: #475569; padding: 8px 16px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 1.5rem; transition: background 0.15s, color 0.15s, border-color 0.15s; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .btn-back-browse:hover { background: #EFF6FF; color: #2563EB; border-color: #BFDBFE; }
+    .detail-gallery { display: grid; grid-template-columns: 1.65fr 1fr; gap: 10px; margin-bottom: 2rem; border-radius: 20px; overflow: hidden; height: 360px; }
+    .detail-main-img { height: 100%; background-size: cover; background-position: center; border-radius: 16px 0 0 16px; position: relative; }
+    .detail-side-imgs { display: flex; flex-direction: column; gap: 10px; height: 100%; }
+    .detail-sub-img { flex: 1; background-size: cover; background-position: center; position: relative; }
+    .detail-sub-img:first-child { border-radius: 0 16px 0 0; }
+    .detail-sub-img:last-child  { border-radius: 0 0 16px 0; }
+    .detail-more-overlay { position: absolute; inset: 0; background: rgba(15,23,42,0.6); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 0 0 16px 0; transition: background 0.2s; }
+    .detail-more-overlay:hover { background: rgba(37,99,235,0.7); }
+    .detail-more-overlay i { font-size: 1.3rem; margin-bottom: 4px; }
+    .detail-layout-grid { display: grid; grid-template-columns: 1fr 360px; gap: 2rem; align-items: start; }
+    .detail-left-col { display: flex; flex-direction: column; gap: 0; }
+    .detail-title-block { padding-bottom: 1.5rem; border-bottom: 1px solid #f1f5f9; margin-bottom: 1.5rem; }
+    .detail-title-row h1 { font-size: 1.75rem; font-weight: 800; color: #0f172a; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 10px; text-transform: capitalize; }
+    .detail-badges-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 0.85rem; color: #64748b; font-weight: 600; margin-bottom: 10px; }
+    .detail-badges-row i { font-size: 0.8rem; }
+    .badge-type { background: #EFF6FF; color: #2563EB; padding: 4px 11px; border-radius: 20px; font-weight: 700; font-size: 0.78rem; }
+    .detail-section-block { padding-bottom: 1.5rem; border-bottom: 1px solid #f1f5f9; margin-bottom: 1.5rem; }
+    .detail-section-block:last-child { border-bottom: none; margin-bottom: 0; }
+    .detail-section-title { font-size: 1rem; font-weight: 800; color: #0f172a; letter-spacing: -0.01em; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+    .detail-section-title i { color: #2563EB; font-size: 0.9rem; }
+    .detail-desc-box { font-size: 0.925rem; color: #475569; line-height: 1.7; }
+    .detail-amenities-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .detail-amenity-pill { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; font-size: 0.84rem; font-weight: 600; color: #334155; display: flex; align-items: center; gap: 8px; transition: border-color 0.15s, background 0.15s; }
+    .detail-amenity-pill:hover { border-color: #BFDBFE; background: #EFF6FF; }
+    .detail-amenity-pill i { color: #2563EB; font-size: 0.8rem; width: 14px; text-align: center; }
+    .detail-rules-box { background: #FFFBEB; border: 1px solid #FDE68A; border-left: 4px solid #FFC928; border-radius: 12px; padding: 1rem 1.25rem; color: #78350F; font-size: 0.9rem; line-height: 1.65; font-weight: 500; }
+    .detail-map-box { border-radius: 14px; overflow: hidden; border: 1px solid #e2e8f0; height: 260px; width: 100%; position: relative; }
+    .btn-open-maps { position: absolute; bottom: 10px; right: 10px; background: #fff; color: #0f172a; border: 1px solid #e2e8f0; padding: 6px 12px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.12); display: inline-flex; align-items: center; gap: 6px; z-index: 100; transition: background 0.15s; }
+    .btn-open-maps:hover { background: #f1f5f9; }
+    .owner-contact-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 1.1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .btn-msg-owner { background: #2563EB; color: #fff; border: none; padding: 0.6rem 1.2rem; border-radius: 9px; font-size: 0.85rem; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: background 0.15s; flex-shrink: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .btn-msg-owner:hover { background: #1D4ED8; }
+    .detail-booking-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 1.75rem; box-shadow: 0 4px 24px rgba(0,0,0,0.07); height: fit-content; position: sticky; top: 90px; }
+    .booking-price-header { margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid #f1f5f9; }
+    .booking-price-val { font-size: 2rem; font-weight: 800; color: #FFC928; letter-spacing: -0.03em; line-height: 1; }
+    .booking-price-val span { font-size: 0.9rem; font-weight: 500; color: #64748b; }
+    .booking-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-bottom: 10px; margin-top: 1.1rem; }
+    .rooms-selector-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.25rem; max-height: 200px; overflow-y: auto; }
+    .booking-input-group { margin-bottom: 1rem; }
+    .booking-input-group label { display: block; font-size: 0.8rem; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+    .booking-input-group input, .booking-input-group textarea { width: 100%; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 0.75rem; font-size: 0.875rem; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; transition: border-color 0.15s; }
+    .booking-input-group input:focus, .booking-input-group textarea:focus { border-color: #2563EB; }
+    .btn-submit-booking { width: 100%; background: #2563EB; color: #fff; border: none; padding: 0.9rem; border-radius: 12px; font-size: 0.925rem; font-weight: 800; cursor: pointer; margin-bottom: 8px; transition: background 0.15s, transform 0.15s; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .btn-submit-booking:hover { background: #1D4ED8; transform: translateY(-1px); }
+    .btn-contact-owner { width: 100%; background: #fff; border: 1.5px solid #e2e8f0; color: #334155; padding: 0.75rem; border-radius: 12px; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: background 0.15s, border-color 0.15s; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .btn-contact-owner:hover { background: #f8fafc; border-color: #cbd5e1; }
+    @media (max-width: 1024px) { .detail-layout-grid { grid-template-columns: 1fr; } .detail-booking-card { position: static; } .detail-gallery { height: 280px; } }
+    @media (max-width: 640px) { .detail-gallery { grid-template-columns: 1fr; height: 220px; } .detail-side-imgs { display: none; } .detail-main-img { border-radius: 16px; } .detail-amenities-grid { grid-template-columns: repeat(2, 1fr); } }
     .booking-price-header { margin-bottom: 1.25rem; }
     .booking-price-val { font-size: 1.8rem; font-weight: 800; color: #0f172a; }
     .booking-price-val span { font-size: 0.85rem; font-weight: 500; color: #64748b; }
-
-    .rooms-selector-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 1.25rem;
-      max-height: 220px;
-      overflow-y: auto;
-    }
-
-    .room-card-option {
-      border: 2px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 0.85rem;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-    }
-
+    .rooms-selector-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.25rem; max-height: 220px; overflow-y: auto; }
+    .room-card-option { border: 2px solid #e2e8f0; border-radius: 12px; padding: 0.85rem; cursor: pointer; text-align: center; transition: all 0.2s; }
     .room-card-option.selected { border-color: #2563eb; background: #eff6ff; }
     .room-card-option.taken { opacity: 0.5; cursor: not-allowed; background: #f8fafc; }
-
     .room-title { font-size: 0.85rem; font-weight: 800; color: #0f172a; }
     .room-price { font-size: 0.8rem; color: #2563eb; font-weight: 700; margin-top: 2px; }
     .room-status { font-size: 0.7rem; font-weight: 700; margin-top: 4px; }
     .room-status.avail { color: #16a34a; }
     .room-status.taken { color: #dc2626; }
-
     .booking-input-group { margin-bottom: 1rem; }
     .booking-input-group label { display: block; font-size: 0.82rem; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
-
-    .booking-input-group input,
-    .booking-input-group textarea {
-      width: 100%;
-      border: 1px solid #cbd5e1;
-      border-radius: 10px;
-      padding: 0.75rem;
-      font-size: 0.88rem;
-      outline: none;
-    }
-
-    .btn-submit-booking {
-      width: 100%;
-      background: #2563eb;
-      color: #ffffff;
-      border: none;
-      padding: 0.9rem;
-      border-radius: 12px;
-      font-size: 0.95rem;
-      font-weight: 800;
-      cursor: pointer;
-      margin-bottom: 8px;
-      transition: background 0.2s;
-    }
+    .booking-input-group input, .booking-input-group textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 10px; padding: 0.75rem; font-size: 0.88rem; outline: none; }
+    .btn-submit-booking { width: 100%; background: #2563eb; color: #ffffff; border: none; padding: 0.9rem; border-radius: 12px; font-size: 0.95rem; font-weight: 800; cursor: pointer; margin-bottom: 8px; transition: background 0.2s; }
     .btn-submit-booking:hover { background: #1d4ed8; }
-
-    .btn-contact-owner {
-      width: 100%;
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      color: #0f172a;
-      padding: 0.75rem;
-      border-radius: 12px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .modal-backdrop {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(4px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 1.5rem;
-    }
+    .btn-contact-owner { width: 100%; background: #ffffff; border: 1px solid #cbd5e1; color: #0f172a; padding: 0.75rem; border-radius: 12px; font-size: 0.88rem; font-weight: 700; cursor: pointer; }
+    .modal-backdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 1.5rem; }
     .modal-backdrop.open { display: flex; }
-
-    .modal-card {
-      background: #ffffff;
-      border-radius: 20px;
-      width: 100%;
-      max-width: 500px;
-      padding: 2rem;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-    }
-
-    /* ── CLICKABLE BOOKING CARDS + DETAILS MODAL ───────────── */
+    .modal-card { background: #ffffff; border-radius: 20px; width: 100%; max-width: 500px; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
     .booking-card { cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s; }
-    .booking-card:hover { border-color: #2563eb !important; box-shadow: 0 6px 18px rgba(37, 99, 235, 0.12); transform: translateY(-1px); }
-    .booking-link {
-      background: none; border: none; padding: 0; cursor: pointer; text-align: left;
-      font: inherit; font-weight: 800; color: #2563eb;
-      border-bottom: 1.5px dashed rgba(37, 99, 235, 0.45);
-    }
+    .booking-card:hover { border-color: #2563eb !important; box-shadow: 0 6px 18px rgba(37,99,235,0.12); transform: translateY(-1px); }
+    .booking-link { background: none; border: none; padding: 0; cursor: pointer; text-align: left; font: inherit; font-weight: 800; color: #2563eb; border-bottom: 1.5px dashed rgba(37,99,235,0.45); }
     .booking-link:hover { color: #1d4ed8; border-bottom-style: solid; border-color: #1d4ed8; }
     .bd-card { max-width: 540px; max-height: 90vh; overflow-y: auto; }
     .bd-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
@@ -1091,40 +697,12 @@
     .bd-grid .v { font-size: 0.9rem; font-weight: 700; color: #0f172a; word-break: break-word; }
     .bd-quote { margin-top: 0.9rem; padding: 0.75rem 0.9rem; background: #ffffff; border-left: 3px solid #2563eb; border-radius: 6px; font-size: 0.85rem; color: #475569; font-style: italic; word-break: break-word; }
     .bd-owner { display: flex; align-items: center; gap: 0.9rem; }
-    .bd-avatar { width: 44px; height: 44px; border-radius: 50%; background: #314c75; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; }
+    .bd-avatar { width: 44px; height: 44px; border-radius: 50%; background: #2563EB; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; }
     .bd-owner-info { font-size: 0.85rem; color: #475569; word-break: break-word; }
     .bd-owner-info b { display: block; font-size: 1rem; color: #0f172a; }
     .bd-owner-info a { color: #2563eb; text-decoration: none; font-weight: 600; }
     .bd-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1.25rem; }
     .bd-actions button { border: none; border-radius: 10px; padding: 0.7rem 1.2rem; font-weight: 700; font-size: 0.88rem; cursor: pointer; font-family: inherit; }
-
-    .empty-state-card {
-      background: #ffffff;
-      border: 1px dashed #cbd5e1;
-      border-radius: 20px;
-      padding: 5rem 2rem;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      grid-column: 1 / -1;
-    }
-
-    .empty-icon-circle {
-      width: 56px; height: 56px;
-      background: #f1f5f9;
-      border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      color: #314c75; font-size: 1.25rem; margin-bottom: 1rem;
-    }
-
-    @media (max-width: 1024px) {
-      .stats-grid, .dorms-grid { grid-template-columns: 1fr; }
-      .detail-layout-grid { grid-template-columns: 1fr; }
-    }
-  
-    /* ===== Photo viewer (lightbox) ===== */
     .clickable-photo { cursor: zoom-in; transition: filter .2s; }
     .clickable-photo:hover { filter: brightness(.92); }
     #dfLightbox { position: fixed; inset: 0; background: rgba(8,12,24,.94); z-index: 99999; display: none; align-items: center; justify-content: center; flex-direction: column; }
@@ -1141,28 +719,15 @@
     #dfLightbox .lb-thumb { width: 72px; height: 54px; border-radius: 8px; background-size: cover; background-position: center; cursor: pointer; opacity: .55; border: 2px solid transparent; flex: 0 0 auto; }
     #dfLightbox .lb-thumb.active { opacity: 1; border-color: #fff; }
     @media (max-width: 700px) { #dfLightbox .lb-stage { padding: 56px 12px 8px; } #dfLightbox .lb-prev { left: 6px; } #dfLightbox .lb-next { right: 6px; } }
-  </style>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-  <style>
-    /* ── Leaflet map + pin (same look as the homepage map) ── */
-    .df-pin {
-      width: 30px; height: 30px;
-      background: #16a34a;
-      border: 2px solid #ffffff;
-      border-radius: 50% 50% 50% 0;
-      transform: rotate(-45deg);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-    }
-    .df-pin::after {
-      content: '';
-      position: absolute;
-      width: 10px; height: 10px;
-      background: #ffffff;
-      border-radius: 50%;
-      top: 8px; left: 8px;
-    }
+    .df-pin { width: 30px; height: 30px; background: #16a34a; border: 2px solid #ffffff; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: 0 3px 8px rgba(0,0,0,0.4); }
+    .df-pin::after { content: ''; position: absolute; width: 10px; height: 10px; background: #ffffff; border-radius: 50%; top: 8px; left: 8px; }
     .leaflet-container { font-family: 'Plus Jakarta Sans', sans-serif; z-index: 0; }
     .btn-open-maps, .map-open-btn { z-index: 1000; }
+    @media (max-width: 1100px) { .dorms-grid { grid-template-columns: repeat(2, 1fr); } .stats-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 860px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .dorms-grid { grid-template-columns: repeat(2, 1fr); } .welcome-banner { flex-direction: column; align-items: flex-start; } }
+    @media (max-width: 800px) { .rec-grid { grid-template-columns: 1fr; } .cmp-slots { grid-template-columns: 1fr; } }
+    @media (max-width: 640px) { .dashboard-body { padding: 1.25rem 1rem; } .stats-grid { grid-template-columns: 1fr; } .dorms-grid { grid-template-columns: 1fr; } .welcome-banner { padding: 1.5rem 1.25rem; } .welcome-heading { font-size: 1.35rem; } .topbar { padding: 0 1rem; } }
+    @media (max-width: 1024px) { .detail-layout-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -1174,7 +739,7 @@
         <div class="brand-mark">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M12 2L3 9v13h6v-7h6v7h6V9z"/></svg>
         </div>
-        DormFinder
+        Dorm<span class="gold">Finder</span>
       </a>
 
       <div class="sidebar-section-title">Student</div>
@@ -1231,12 +796,15 @@
     
     <!-- TOPBAR -->
     <header class="topbar">
+      <div class="topbar-left">
+        <span class="topbar-page-title" id="topbar-page-title">Overview</span>
+      </div>
       <div class="topbar-right">
-        <div class="icon-btn">
+        <button class="icon-btn" title="Notifications" aria-label="Notifications">
           <i class="fa-regular fa-bell"></i>
-        </div>
-
+        </button>
         <div class="user-profile-display">
+          <div class="user-avatar" id="nav-avatar">S</div>
           <span class="user-name" id="nav-username">Student</span>
         </div>
       </div>
@@ -1247,100 +815,181 @@
 
       <!-- 1. OVERVIEW TAB -->
       <div id="tab-overview" class="tab-view active">
-        <div class="dash-header-row">
-          <div class="dash-title-area">
-            <p id="current-date">Student Portal</p>
-            <h1>Welcome back, <span id="greet-name">Student</span></h1>
+
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+          <div class="welcome-text">
+            <div class="welcome-eyebrow">Student Portal · Minglanilla, Cebu</div>
+            <h1 class="welcome-heading">Welcome back, <span id="greet-name">Student</span>!</h1>
+            <p class="welcome-desc">Discover comfortable and affordable accommodations in Minglanilla. Explore your options and find a place that feels like home.</p>
           </div>
           <button class="btn-find-dorm" onclick="switchTab('browse', document.querySelector('.sidebar-nav li:nth-child(2) .nav-item'))">
-            <i class="fa-solid fa-magnifying-glass"></i> Find a dorm
+            <i class="fa-solid fa-magnifying-glass"></i> Find a Dorm
           </button>
         </div>
 
+        <!-- Stat Cards -->
         <div class="stats-grid">
-          <div class="stat-card" style="cursor: pointer;" onclick="switchTab('saved', document.querySelector('.sidebar-nav li:nth-child(4) .nav-item'))">
+          <div class="stat-card blue" onclick="switchTab('saved', document.querySelector('.sidebar-nav li:nth-child(4) .nav-item'))" title="View saved dorms">
+            <div class="stat-icon-wrap blue">
+              <i class="fa-regular fa-heart"></i>
+            </div>
             <div class="stat-number" id="stat-saved-count">0</div>
-            <div class="stat-label">Saved dorms</div>
-            <div class="stat-sub">View favorites</div>
-            <div class="stat-icon-badge"><i class="fa-regular fa-heart"></i></div>
+            <div class="stat-label">Saved Dorms</div>
+            <div class="stat-sub">Properties you favorited</div>
+            <span class="stat-arrow"><i class="fa-solid fa-arrow-right"></i></span>
           </div>
-          <div class="stat-card" style="cursor: pointer;" onclick="switchTab('bookings', document.querySelector('.sidebar-nav li:nth-child(3) .nav-item'))">
+
+          <div class="stat-card green" onclick="switchTab('bookings', document.querySelector('.sidebar-nav li:nth-child(3) .nav-item'))" title="View my bookings">
+            <div class="stat-icon-wrap green">
+              <i class="fa-regular fa-bookmark"></i>
+            </div>
             <div class="stat-number" id="stat-bookings-count">0</div>
             <div class="stat-label">My Bookings</div>
-            <div class="stat-sub">Track requests</div>
-            <div class="stat-icon-badge"><i class="fa-regular fa-bookmark"></i></div>
+            <div class="stat-sub">Active booking requests</div>
+            <span class="stat-arrow"><i class="fa-solid fa-arrow-right"></i></span>
           </div>
-          <div class="stat-card" style="cursor: pointer;" onclick="switchTab('messages', document.querySelector('.sidebar-nav li:nth-child(5) .nav-item'))">
+
+          <div class="stat-card yellow" onclick="switchTab('messages', document.querySelector('.sidebar-nav li:nth-child(5) .nav-item'))" title="View messages">
+            <div class="stat-icon-wrap yellow">
+              <i class="fa-regular fa-message"></i>
+            </div>
             <div class="stat-number" id="stat-messages-count">0</div>
             <div class="stat-label">Conversations</div>
-            <div class="stat-sub">Active chats</div>
-            <div class="stat-icon-badge"><i class="fa-regular fa-message"></i></div>
+            <div class="stat-sub">Messages with owners</div>
+            <span class="stat-arrow"><i class="fa-solid fa-arrow-right"></i></span>
           </div>
         </div>
 
+        <!-- Recommended Accommodations -->
         <div class="section-header-flex">
           <div class="section-title-sm">
-            <h2>Recommended for you</h2>
-            <p>Verified listings in Minglanilla</p>
+            <h2>Recommended Accommodations</h2>
+            <p>Available verified listings in Minglanilla</p>
           </div>
-          <a class="view-all-link" href="#" onclick="switchTab('browse', document.querySelector('.sidebar-nav li:nth-child(2) .nav-item'))">View all</a>
+          <a class="view-all-link" href="#" onclick="switchTab('browse', document.querySelector('.sidebar-nav li:nth-child(2) .nav-item')); return false;">
+            View all <i class="fa-solid fa-arrow-right"></i>
+          </a>
         </div>
 
         <div class="dorms-grid" id="overviewDormsGrid"></div>
+
       </div>
 
       <!-- 2. BROWSE DORMS TAB -->
       <div id="tab-browse" class="tab-view">
-        <div class="search-hero-card">
-          <h1 class="search-hero-title">Find your <span>perfect dorm</span></h1>
-          <p class="search-hero-subtitle">Search and book the best dormitories near your campus in Minglanilla.</p>
-          
-          <div class="search-bar-pill">
-            <div class="sb-input-group">
-              <i class="fa-solid fa-magnifying-glass"></i>
-              <input type="text" id="dormSearchInput" placeholder="Search by name or location (e.g. Poblacion)..." oninput="filterDorms()"/>
+
+        <!-- ── SEARCH SECTION ─────────────────────────── -->
+        <div class="browse-search-section">
+          <div class="browse-search-heading">
+            <h1 class="browse-heading">Find Your <span class="grad">Perfect Accommodation</span></h1>
+            <p class="browse-subheading">Discover verified boarding houses and dormitories near your campus in Minglanilla, Cebu.</p>
+          </div>
+
+          <!-- Main search bar -->
+          <div class="browse-searchbar">
+            <div class="bsb-input">
+              <i class="fa-solid fa-magnifying-glass bsb-icon"></i>
+              <input type="text" id="dormSearchInput" placeholder="Search by name or location…" oninput="filterDorms()"/>
             </div>
-            
-            <div class="sb-divider"></div>
-            
-            <div class="sb-select-group">
+            <div class="bsb-divider"></div>
+            <div class="bsb-select">
+              <i class="fa-solid fa-building bsb-icon"></i>
               <select id="dormTypeSelect" onchange="filterDorms()">
-                <option value="">Any type</option>
+                <option value="">Any Type</option>
                 <option value="dormitory">Dormitory</option>
                 <option value="boarding house">Boarding House</option>
                 <option value="apartment">Apartment</option>
               </select>
             </div>
-            
-            <div class="sb-divider"></div>
-            
-            <div class="sb-select-group">
+            <div class="bsb-divider"></div>
+            <div class="bsb-select">
+              <i class="fa-solid fa-peso-sign bsb-icon"></i>
               <select id="dormPriceSelect" onchange="filterDorms()">
-                <option value="">Any price</option>
+                <option value="">Any Price</option>
                 <option value="4500">Under ₱4,500</option>
-                <option value="5000">₱4,500 - ₱5,000</option>
+                <option value="5000">₱4,500 – ₱5,000</option>
                 <option value="5000+">Above ₱5,000</option>
               </select>
             </div>
-            
-            <button class="sb-btn-search" onclick="filterDorms()">Search</button>
+            <button class="bsb-btn" onclick="filterDorms()">
+              <i class="fa-solid fa-magnifying-glass"></i> Search
+            </button>
           </div>
 
-          <div class="search-tags-row">
-            <a class="tag-pill active" onclick="setSearchFilter('Minglanilla', this)"><i class="fa-solid fa-location-dot"></i> Minglanilla</a>
-            <a class="tag-pill" onclick="setSearchFilter('Poblacion', this)"><i class="fa-solid fa-location-dot"></i> Poblacion</a>
-            <a class="tag-pill" onclick="setSearchFilter('Calajo-an', this)"><i class="fa-solid fa-location-dot"></i> Calajo-an</a>
+          <!-- Location quick filters -->
+          <div class="browse-filter-row">
+            <div class="browse-filter-group">
+              <span class="browse-filter-label"><i class="fa-solid fa-location-dot"></i> Location:</span>
+              <div class="search-tags-row">
+                <a class="tag-pill active" onclick="setSearchFilter('Minglanilla', this)">All</a>
+                <a class="tag-pill" onclick="setSearchFilter('Poblacion', this)">Poblacion</a>
+                <a class="tag-pill" onclick="setSearchFilter('Calajo-an', this)">Calajo-an</a>
+                <a class="tag-pill" onclick="setSearchFilter('Tungkop', this)">Tungkop</a>
+                <a class="tag-pill" onclick="setSearchFilter('Ward', this)">Ward</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amenity chip filters -->
+          <div class="browse-filter-row">
+            <div class="browse-filter-group">
+              <span class="browse-filter-label"><i class="fa-solid fa-star"></i> Amenities:</span>
+              <div class="amenity-chips-row" id="amenityChipsRow">
+                <button class="amenity-chip" data-amenity="WiFi" onclick="toggleAmenityChip(this)">
+                  <i class="fa-solid fa-wifi"></i> WiFi
+                </button>
+                <button class="amenity-chip" data-amenity="AC" onclick="toggleAmenityChip(this)">
+                  <i class="fa-solid fa-snowflake"></i> Air Conditioning
+                </button>
+                <button class="amenity-chip" data-amenity="CCTV" onclick="toggleAmenityChip(this)">
+                  <i class="fa-solid fa-video"></i> CCTV
+                </button>
+                <button class="amenity-chip" data-amenity="Parking" onclick="toggleAmenityChip(this)">
+                  <i class="fa-solid fa-square-parking"></i> Parking
+                </button>
+                <button class="amenity-chip" data-amenity="Study Area" onclick="toggleAmenityChip(this)">
+                  <i class="fa-solid fa-book"></i> Study Area
+                </button>
+                <button class="amenity-chip" data-amenity="Laundry" onclick="toggleAmenityChip(this)">
+                  <i class="fa-solid fa-shirt"></i> Laundry
+                </button>
+                <button class="amenity-chip" data-amenity="Kitchen" onclick="toggleAmenityChip(this)">
+                  <i class="fa-solid fa-kitchen-set"></i> Kitchen
+                </button>
+                <button class="amenity-chip" data-amenity="Water" onclick="toggleAmenityChip(this)">
+                  <i class="fa-solid fa-droplet"></i> Water
+                </button>
+                <button class="amenity-chip" data-amenity="Electricity" onclick="toggleAmenityChip(this)">
+                  <i class="fa-solid fa-bolt"></i> Electricity
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="section-header-flex" style="margin-bottom: 1.25rem;">
-          <div class="section-title-sm">
-            <h2>Recommended for you</h2>
-            <p id="browse-results-count">Verified listings found</p>
+        <!-- ── RESULTS HEADER ─────────────────────────── -->
+        <div class="browse-results-header">
+          <div class="browse-results-left">
+            <span class="browse-results-count" id="browse-results-count">Loading listings…</span>
+            <div class="browse-active-chips" id="browseActiveChips"></div>
+          </div>
+          <div class="browse-results-right">
+            <select class="browse-sort-select" id="browseSortSelect" onchange="filterDorms()">
+              <option value="default">Sort: Default</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="name-asc">Name: A–Z</option>
+            </select>
+            <button class="browse-reset-btn" id="browseResetBtn" onclick="resetBrowseFilters()" title="Reset all filters" style="display:none">
+              <i class="fa-solid fa-rotate-left"></i> Reset
+            </button>
           </div>
         </div>
 
+        <!-- ── LISTINGS GRID ──────────────────────────── -->
         <div class="dorms-grid" id="browseDormsGrid"></div>
+
       </div>
 
       <!-- 3. STUDENT DORM DETAIL VIEW -->
@@ -1353,38 +1002,40 @@
 
         <div class="detail-layout-grid">
           <div class="detail-left-col">
-            <div>
+
+            <!-- Title block -->
+            <div class="detail-title-block">
               <div class="detail-title-row">
                 <h1 id="sdPropName">Sunrise Dormitory</h1>
-              </div>
-              <div>
-                <button class="cmp-detail-btn" id="sdCompareBtn" onclick="if (activeSelectedProperty) toggleCompare(activeSelectedProperty.id)"><i class="fa-solid fa-code-compare"></i> Compare</button>
               </div>
               <div class="detail-badges-row">
                 <span class="badge-type" id="sdPropType">Dormitory</span>
                 <span><i class="fa-solid fa-location-dot"></i> <span id="sdPropLocation">Minglanilla, Cebu</span></span>
-                <span><i class="fa-solid fa-star" style="color:#f59e0b"></i> <span id="sdPropRating">New</span></span>
+                <span><i class="fa-solid fa-star" style="color:#FFC928"></i> <span id="sdPropRating">New</span></span>
               </div>
+              <button class="cmp-detail-btn" id="sdCompareBtn" onclick="if (activeSelectedProperty) toggleCompare(activeSelectedProperty.id)"><i class="fa-solid fa-code-compare"></i> Compare</button>
             </div>
 
-            <div class="detail-desc-box" id="sdPropDesc">
-              A clean and safe dormitory located near the school, perfect for students. Complete amenities and security.
+            <!-- Description -->
+            <div class="detail-section-block">
+              <div class="detail-section-title"><i class="fa-regular fa-file-lines"></i> About this property</div>
+              <div class="detail-desc-box" id="sdPropDesc">A clean and safe dormitory located near the school, perfect for students.</div>
             </div>
 
-            <div>
+            <!-- Amenities -->
+            <div class="detail-section-block">
               <div class="detail-section-title"><i class="fa-regular fa-circle-check"></i> Amenities</div>
               <div class="detail-amenities-grid" id="sdAmenitiesContainer"></div>
             </div>
 
-            <div>
-              <div class="detail-section-title"><i class="fa-regular fa-file-lines"></i> House Rules</div>
-              <div class="detail-rules-box" id="sdPropRules">
-                No visitors after 10PM. Quiet hours 10PM–6AM.
-              </div>
+            <!-- House Rules -->
+            <div class="detail-section-block">
+              <div class="detail-section-title"><i class="fa-solid fa-shield-halved"></i> House Rules</div>
+              <div class="detail-rules-box" id="sdPropRules">No visitors after 10PM. Quiet hours 10PM–6AM.</div>
             </div>
 
-            <!-- LOCATION MAP WIDGET -->
-            <div>
+            <!-- Location -->
+            <div class="detail-section-block">
               <div class="detail-section-title"><i class="fa-solid fa-location-dot"></i> Location</div>
               <div class="detail-map-box">
                 <div id="sdMap" style="width:100%;height:100%;"></div>
@@ -1394,28 +1045,27 @@
               </div>
             </div>
 
-            <!-- PROPERTY OWNER SECTION -->
-            <div>
-              <div class="detail-section-title">Property Owner</div>
+            <!-- Property Owner -->
+            <div class="detail-section-block">
+              <div class="detail-section-title"><i class="fa-regular fa-user"></i> Property Owner</div>
               <div class="owner-contact-card">
-                <div class="owner-info-flex" style="display: flex; align-items: center; gap: 12px;">
-                  <div class="owner-avatar-circle" id="sdOwnerInitials" style="width: 44px; height: 44px; background: #1b2d47; color: #ffffff; font-weight: 800; border-radius: 50%; display: flex; align-items: center; justify-content: center;">PO</div>
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div id="sdOwnerInitials" style="width:44px;height:44px;background:#2563EB;color:#fff;font-weight:800;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;">PO</div>
                   <div>
-                    <h4 id="sdOwnerName" style="font-size: 0.95rem; font-weight: 800; color: #0f172a;">Property Owner</h4>
-                    <p style="font-size: 0.78rem; color: #64748b;" id="sdOwnerEmail">owner@dormfinder.com</p>
+                    <div id="sdOwnerName" style="font-size:0.95rem;font-weight:800;color:#0f172a;">Property Owner</div>
+                    <div id="sdOwnerEmail" style="font-size:0.78rem;color:#64748b;margin-top:2px;">owner@dormfinder.com</div>
                   </div>
                 </div>
                 <button class="btn-msg-owner" onclick="openMessageModal()"><i class="fa-regular fa-message"></i> Message</button>
               </div>
             </div>
 
-            <!-- REVIEWS & RECOMMENDATIONS -->
+            <!-- Reviews & Recommendations -->
             <div class="rv-section">
               <div class="rv-tabs">
                 <button class="rv-tab active" id="rvTabReviews" onclick="switchRvTab('reviews')">Reviews <span id="rvTabCount"></span></button>
                 <button class="rv-tab" id="rvTabRecs" onclick="switchRvTab('recs')">Recommendations</button>
               </div>
-
               <div id="rvPaneReviews">
                 <div class="rv-top">
                   <div class="rv-h">Reviews (<span id="rvCount">0</span>)</div>
@@ -1429,21 +1079,21 @@
                 <div id="rvForm"></div>
                 <div id="rvList"></div>
               </div>
-
               <div id="rvPaneRecs" style="display: none;"></div>
             </div>
+
           </div>
 
-          <!-- RIGHT SIDE: ROOM PICKER AND BOOKING FORM -->
+          <!-- RIGHT: Booking Card -->
           <div class="detail-booking-card">
             <div class="booking-price-header">
               <div class="booking-price-val" id="sdPropPrice">₱3,500<span>/month</span></div>
-              <span style="font-size: 0.8rem; font-weight:700; color:#16a34a;" id="sdAvailBadge">Available</span>
+              <span style="font-size:0.82rem;font-weight:700;color:#16a34a;display:block;margin-top:4px;" id="sdAvailBadge">Available</span>
             </div>
 
             <div id="sdPriceBreakdown"></div>
 
-            <label style="font-size:0.82rem; font-weight:800; color:#0f172a; display:block; margin-bottom:8px;">SELECT A ROOM</label>
+            <div class="booking-label">Select a Room</div>
             <div class="rooms-selector-grid" id="sdRoomsGridContainer"></div>
 
             <div class="booking-input-group">
@@ -1452,12 +1102,16 @@
             </div>
 
             <div class="booking-input-group">
-              <label>Message (Optional)</label>
-              <textarea id="bookingMessage" placeholder="Tell the owner about yourself..."></textarea>
+              <label>Message <span style="color:#94a3b8;font-weight:400">(Optional)</span></label>
+              <textarea id="bookingMessage" rows="3" placeholder="Tell the owner about yourself…"></textarea>
             </div>
 
-            <button class="btn-submit-booking" onclick="submitBookingRequest()">Submit Booking Request</button>
-            <button class="btn-contact-owner" onclick="openMessageModal()">Message Owner</button>
+            <button class="btn-submit-booking" onclick="submitBookingRequest()">
+              <i class="fa-regular fa-bookmark"></i> Submit Booking Request
+            </button>
+            <button class="btn-contact-owner" onclick="openMessageModal()">
+              <i class="fa-regular fa-message"></i> Message Owner
+            </button>
           </div>
         </div>
       </div>
@@ -2352,6 +2006,14 @@
           document.getElementById('greet-name').textContent = u.name.split(' ')[0];
           document.getElementById('profile-input-name').value = u.name;
           document.getElementById('profile-display-name').textContent = u.name;
+
+          // ── Set avatar initials ───────────────────────────
+          const parts = u.name.trim().split(' ');
+          const initials = parts.length > 1
+            ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+            : parts[0].slice(0, 2).toUpperCase();
+          const avatarEl = document.getElementById('nav-avatar');
+          if (avatarEl) avatarEl.textContent = initials;
         }
         if (u.email) document.getElementById('profile-input-email').value = u.email;
         if (u.phone) document.getElementById('profile-input-phone').value = u.phone;
@@ -2374,6 +2036,20 @@
           saveCompare();
           renderStudentDorms(allDatabaseProperties);
           refreshCompareUI();
+
+          // ── Deep-link: browser.html redirects students here with ?property=ID ──
+          // Open that listing automatically so the experience is seamless.
+          const deepId = new URLSearchParams(window.location.search).get('property');
+          if (deepId) {
+            const idx = allDatabaseProperties.findIndex(p => String(p.id) === String(deepId));
+            if (idx >= 0) {
+              // Switch to browse tab first, then open the detail view
+              const browseBtn = document.querySelector('.nav-item[onclick*="browse"]');
+              if (browseBtn) browseBtn.click();
+              // Small delay so the tab is visible before the detail panel opens
+              setTimeout(() => openStudentDormDetail(idx), 80);
+            }
+          }
         }
       } catch (err) {
         console.error('Could not load properties from database:', err);
@@ -2401,28 +2077,36 @@
       let cardsHtml = '';
       properties.forEach((p, idx) => {
         const isFav = savedDormsList.some(d => d.name === p.name);
+        const inCompare = compareIds.includes(Number(p.id));
+        const imgSrc = (p.images && p.images[0]) || p.image || 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=600&q=80';
+        const avail = p.availability || 'available';
+        const availLabel = avail === 'taken' ? 'Fully Booked' : avail === 'reserved' ? 'Reserved' : 'Available';
+
         cardsHtml += `
           <div class="dorm-card" onclick="openStudentDormDetail(${allDatabaseProperties.indexOf(p)})">
-            <div class="dorm-img-wrap" style="background-image: url('${p.image || 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=600&q=80'}')">
-              <span class="dorm-status-badge">Available now</span>
-              <button class="dorm-fav-btn ${isFav ? 'favorited' : ''}" onclick="event.stopPropagation(); toggleSaveDorm(this, '${p.name}', '${p.address}', '${p.rent}', '${ratingLabel(p)}', '${p.image || ''}')">
+            <div class="dorm-img-wrap">
+              <img src="${imgSrc}" alt="${p.name}" loading="lazy" onerror="this.style.display='none'"/>
+              <span class="dorm-status-badge ${avail}">${availLabel}</span>
+              <button class="dorm-fav-btn ${isFav ? 'favorited' : ''}" onclick="event.stopPropagation(); toggleSaveDorm(this, '${p.name}', '${p.address}', '${p.rent}', '${ratingLabel(p)}', '${p.image || ''}')" title="${isFav ? 'Remove from saved' : 'Save dorm'}">
                 <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
               </button>
-              <button class="dorm-compare-btn ${compareIds.includes(Number(p.id)) ? 'active' : ''}" data-cmp-id="${p.id}" onclick="event.stopPropagation(); toggleCompare(${p.id})">
-                <i class="fa-solid ${compareIds.includes(Number(p.id)) ? 'fa-check' : 'fa-code-compare'}"></i> ${compareIds.includes(Number(p.id)) ? 'Added' : 'Compare'}
+              <button class="dorm-compare-btn ${inCompare ? 'active' : ''}" data-cmp-id="${p.id}" onclick="event.stopPropagation(); toggleCompare(${p.id})">
+                <i class="fa-solid ${inCompare ? 'fa-check' : 'fa-code-compare'}"></i> ${inCompare ? 'Added' : 'Compare'}
               </button>
             </div>
             <div class="dorm-content">
-              <div>
-                <div class="dorm-top-info">
-                  <div class="dorm-name">${p.name}</div>
-                  <div class="dorm-rating"><i class="fa-solid fa-star"></i> ${ratingLabel(p)}</div>
-                </div>
-                <div class="dorm-location">${p.address}</div>
+              <div class="dorm-top-info">
+                <div class="dorm-name">${p.name}</div>
+                <div class="dorm-rating"><i class="fa-solid fa-star"></i> ${ratingLabel(p)}</div>
               </div>
+              <span class="dorm-type-chip">${p.type || 'Dormitory'}</span>
+              <div class="dorm-location"><i class="fa-solid fa-location-dot"></i> ${p.address || 'Minglanilla, Cebu'}</div>
               <div class="dorm-footer-info">
-                <span><i class="fa-solid fa-location-dot"></i> Minglanilla Area</span>
-                <div class="dorm-price">${p.rent}<span>/mo</span>${dfAmenityFees(p) > 0 ? `<div class="dorm-total">${dfPeso(dfTotalMonthly(p))} total with amenities</div>` : ''}</div>
+                <div>
+                  <div class="dorm-price">${p.rent}<span>/mo</span></div>
+                  ${dfAmenityFees(p) > 0 ? `<div class="dorm-total">${dfPeso(dfTotalMonthly(p))} total with amenities</div>` : ''}
+                </div>
+                <button class="btn-view-dorm" onclick="event.stopPropagation(); openStudentDormDetail(${allDatabaseProperties.indexOf(p)})">View Details</button>
               </div>
             </div>
           </div>
@@ -2930,6 +2614,21 @@
         const matchingNav = document.querySelector(`[onclick*="'${tabId}'"]`);
         if (matchingNav) matchingNav.classList.add('active');
       }
+
+      // ── Sync topbar page title ────────────────────────────
+      const pageTitles = {
+        'overview':    'Overview',
+        'browse':      'Browse Accommodations',
+        'dorm-detail': 'Property Details',
+        'bookings':    'My Bookings',
+        'saved':       'Saved Dorms',
+        'messages':    'Messages',
+        'compare':     'Compare Dorms',
+        'profile':     'My Profile'
+      };
+      const titleEl = document.getElementById('topbar-page-title');
+      if (titleEl) titleEl.textContent = pageTitles[tabId] || 'Dashboard';
+
       window.scrollTo(0, 0);
 
       currentTabId = tabId;
@@ -2973,6 +2672,15 @@
           document.getElementById('nav-username').textContent = data.user.name;
           document.getElementById('greet-name').textContent = data.user.name.split(' ')[0];
           document.getElementById('profile-display-name').textContent = data.user.name;
+
+          // ── Refresh avatar initials ───────────────────────
+          const parts = data.user.name.trim().split(' ');
+          const initials = parts.length > 1
+            ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+            : parts[0].slice(0, 2).toUpperCase();
+          const avatarEl = document.getElementById('nav-avatar');
+          if (avatarEl) avatarEl.textContent = initials;
+
           localStorage.setItem('df_user', JSON.stringify(data.user));
           alert('Profile successfully updated!');
         } else {
@@ -2987,8 +2695,14 @@
       const query = document.getElementById('dormSearchInput').value.toLowerCase().trim();
       const typeFilter = document.getElementById('dormTypeSelect').value.toLowerCase();
       const priceFilter = document.getElementById('dormPriceSelect').value;
+      const sortSelect = document.getElementById('browseSortSelect');
+      const sortVal = sortSelect ? sortSelect.value : 'default';
 
-      const filtered = allDatabaseProperties.filter(p => {
+      // Collect active amenity chips
+      const activeAmenities = Array.from(document.querySelectorAll('.amenity-chip.active'))
+        .map(chip => chip.dataset.amenity);
+
+      let filtered = allDatabaseProperties.filter(p => {
         const name = p.name.toLowerCase();
         const location = p.address.toLowerCase();
         const type = (p.type || '').toLowerCase();
@@ -3002,10 +2716,66 @@
         else if (priceFilter === '5000') matchesPrice = (priceVal > 4500 && priceVal <= 5000);
         else if (priceFilter === '5000+') matchesPrice = (priceVal > 5000);
 
-        return matchesSearch && matchesType && matchesPrice;
+        // Amenity chips: property must have ALL selected amenities
+        const propAmenities = (p.amenities || []).map(a => a.toLowerCase());
+        const matchesAmenities = activeAmenities.every(a =>
+          propAmenities.some(pa => pa.includes(a.toLowerCase()))
+        );
+
+        return matchesSearch && matchesType && matchesPrice && matchesAmenities;
       });
 
+      // Sort
+      if (sortVal === 'price-asc') {
+        filtered.sort((a, b) => parseInt(a.rawRent || 0) - parseInt(b.rawRent || 0));
+      } else if (sortVal === 'price-desc') {
+        filtered.sort((a, b) => parseInt(b.rawRent || 0) - parseInt(a.rawRent || 0));
+      } else if (sortVal === 'name-asc') {
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+      }
+
       renderStudentDorms(filtered);
+      updateBrowseActiveChips(activeAmenities, query, typeFilter, priceFilter);
+    }
+
+    function updateBrowseActiveChips(amenities, query, typeFilter, priceFilter) {
+      const container = document.getElementById('browseActiveChips');
+      if (!container) return;
+      const tags = [];
+
+      if (query) tags.push({ label: `"${query}"`, clear: () => { document.getElementById('dormSearchInput').value = ''; filterDorms(); } });
+      if (typeFilter) tags.push({ label: typeFilter, clear: () => { document.getElementById('dormTypeSelect').value = ''; filterDorms(); } });
+      if (priceFilter) {
+        const labels = { '4500': 'Under ₱4,500', '5000': '₱4,500–₱5,000', '5000+': 'Above ₱5,000' };
+        tags.push({ label: labels[priceFilter] || priceFilter, clear: () => { document.getElementById('dormPriceSelect').value = ''; filterDorms(); } });
+      }
+
+      container.innerHTML = tags.map((t, i) =>
+        `<span class="browse-active-tag">${t.label}<button onclick="(${t.clear.toString()})()" title="Remove filter"><i class="fa-solid fa-xmark"></i></button></span>`
+      ).join('');
+
+      // Show/hide reset button
+      const hasFilters = amenities.length > 0 || query || typeFilter || priceFilter;
+      const resetBtn = document.getElementById('browseResetBtn');
+      if (resetBtn) resetBtn.style.display = hasFilters ? 'inline-flex' : 'none';
+    }
+
+    function toggleAmenityChip(chip) {
+      chip.classList.toggle('active');
+      filterDorms();
+    }
+
+    function resetBrowseFilters() {
+      document.getElementById('dormSearchInput').value = '';
+      document.getElementById('dormTypeSelect').value = '';
+      document.getElementById('dormPriceSelect').value = '';
+      // Reset location pills
+      document.querySelectorAll('.search-tags-row .tag-pill').forEach((p, i) => {
+        p.classList.toggle('active', i === 0);
+      });
+      // Reset amenity chips
+      document.querySelectorAll('.amenity-chip.active').forEach(c => c.classList.remove('active'));
+      filterDorms();
     }
 
     function setSearchFilter(keyword, btnElem) {
@@ -3045,22 +2815,21 @@
       }
       let gridHtml = '<div class="dorms-grid">';
       savedDormsList.forEach(d => {
+        const imgSrc = d.imgUrl || 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=600&q=80';
         gridHtml += `
           <div class="dorm-card">
-            <div class="dorm-img-wrap" style="background-image: url('${d.imgUrl}')">
-              <span class="dorm-status-badge">Available now</span>
+            <div class="dorm-img-wrap">
+              <img src="${imgSrc}" alt="${d.name}" loading="lazy" onerror="this.style.display='none'"/>
+              <span class="dorm-status-badge available">Available</span>
               <button class="dorm-fav-btn favorited" onclick="removeSavedDormByCard('${d.name}')"><i class="fa-solid fa-heart"></i></button>
             </div>
             <div class="dorm-content">
-              <div>
-                <div class="dorm-top-info">
-                  <div class="dorm-name">${d.name}</div>
-                  <div class="dorm-rating"><i class="fa-solid fa-star"></i> ${d.rating}</div>
-                </div>
-                <div class="dorm-location">${d.location}</div>
+              <div class="dorm-top-info">
+                <div class="dorm-name">${d.name}</div>
+                <div class="dorm-rating"><i class="fa-solid fa-star"></i> ${d.rating}</div>
               </div>
+              <div class="dorm-location"><i class="fa-solid fa-location-dot"></i> ${d.location}</div>
               <div class="dorm-footer-info">
-                <span><i class="fa-solid fa-location-dot"></i> Minglanilla Area</span>
                 <div class="dorm-price">${d.price.split('/')[0]}<span>/mo</span></div>
               </div>
             </div>

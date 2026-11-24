@@ -6,298 +6,114 @@
   <title>DormFinder — Find Your Perfect Dorm Near Campus</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
   <style>
-    /* ═══════════════════════════════════════════════════════════
-        LANDING — GLOBAL (Slate Blue Theme)
-    ═══════════════════════════════════════════════════════════ */
-    html { scroll-behavior: smooth; }
+    /* ═══════════════════════════════════════════════════════
+       LANDING PAGE — PAGE-SPECIFIC STYLES
+    ═══════════════════════════════════════════════════════ */
 
-    body {
-      background: #060d1f;
-      color: #ffffff;
-      overflow-x: hidden;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    section { position: relative; }
-
-    .container {
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 0 28px;
-    }
-
-    /* ── NAVBAR ─────────────────────────────────────────────── */
+    /* ── NAVBAR ─────────────────────────────────────────── */
     .land-nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 900;
-      height: 64px;
+      height: 68px;
+      background: #080F20;
+      border-bottom: 1px solid rgba(203,213,225,0.08);
       display: flex;
       align-items: center;
-      transition: background 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+      transition: box-shadow 0.3s ease;
     }
+    .land-nav.scrolled { box-shadow: 0 1px 24px rgba(0,0,0,0.5); }
+    .land-nav .container { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .nav-brand { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; font-weight: 800; color: #fff; letter-spacing: -0.04em; text-decoration: none; flex-shrink: 0; }
+    .nav-brand-mark { width: 36px; height: 36px; background: #2563EB; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .nav-brand .gold { color: #FFC928; }
+    .nav-center { display: flex; align-items: center; gap: 2px; }
+    .land-nav-link { padding: 7px 13px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; color: rgba(255,255,255,0.65); cursor: pointer; transition: background 0.15s, color 0.15s; text-decoration: none; white-space: nowrap; }
+    .land-nav-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
+    .nav-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .btn-nav-outline { padding: 7px 16px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.22); background: transparent; color: #fff; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: border-color 0.15s, background 0.15s; text-decoration: none; white-space: nowrap; }
+    .btn-nav-outline:hover { border-color: rgba(255,255,255,0.55); background: rgba(255,255,255,0.06); }
+    .btn-nav-solid { padding: 7px 18px; border-radius: 8px; border: none; background: #2563EB; color: #fff; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: background 0.15s, transform 0.15s; box-shadow: 0 2px 10px rgba(37,99,235,0.35); text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .btn-nav-solid:hover { background: #1D4ED8; transform: translateY(-1px); }
+    .nav-hamburger { display: none; width: 38px; height: 38px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.18); background: transparent; color: #fff; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
 
-    .land-nav.scrolled {
-      background: rgba(6,13,31,0.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 1px 0 rgba(255,255,255,0.07);
-    }
-
-    .land-nav .container {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: white;
-      letter-spacing: -0.04em;
-      text-decoration: none;
-    }
-
-    .nav-brand-mark {
-      width: 36px; height: 36px;
-      background: #314c75;
-      border-radius: 9px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .nav-brand-mark svg { display: block; }
-    .nav-brand .gold { color: #fbbf24; }
-
-    .nav-center {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .land-nav-link {
-      padding: 7px 14px;
-      border-radius: 8px;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: rgba(255,255,255,0.65);
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      text-decoration: none;
-    }
-    .land-nav-link:hover { background: rgba(255,255,255,0.08); color: white; }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-nav-outline {
-      padding: 7px 16px;
-      border-radius: 8px;
-      border: 1.5px solid rgba(255,255,255,0.25);
-      background: transparent;
-      color: white;
-      font-size: 0.875rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-      text-decoration: none;
-    }
-    .btn-nav-outline:hover { border-color: white; background: rgba(255,255,255,0.08); }
-
-    .btn-nav-solid {
-      padding: 7px 18px;
-      border-radius: 8px;
-      border: none;
-      background: #2866c4;
-      color: white;
-      font-size: 0.875rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.15s;
-      box-shadow: 0 2px 8px rgba(49,76,117,0.40);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-    }
-    .btn-nav-solid:hover { background: #263c5d; transform: translateY(-1px); }
-
-    /* ── HERO ───────────────────────────────────────────────── */
-    .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      padding-top: 64px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden; /* Clips the bottom attribution bar */
-    }
-
-    #heroMap {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      background: #0b1630;
-    }
-
-    /* Dark-tint only the map tiles so the property pins keep their colors */
-    #heroMap .leaflet-tile-pane {
-      filter: invert(90%) hue-rotate(180deg) brightness(88%) contrast(130%);
-    }
-
-    .leaflet-container .leaflet-control-attribution {
-      font-size: 10px;
-      background: rgba(6,13,31,0.6);
-      color: rgba(255,255,255,0.6);
-    }
+    /* ── HERO ────────────────────────────────────────────── */
+    .hero { min-height: 100vh; display: flex; align-items: center; padding-top: 68px; position: relative; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+    #heroMap { position: absolute; inset: 0; width: 100%; height: 100%; background: #0b1630; }
+    #heroMap .leaflet-tile-pane { filter: invert(90%) hue-rotate(180deg) brightness(82%) contrast(130%); }
+    .leaflet-container .leaflet-control-attribution { font-size: 10px; background: rgba(8,15,32,0.65); color: rgba(255,255,255,0.55); }
     .leaflet-container .leaflet-control-attribution a { color: #93c5fd; }
+    .df-pin { width: 28px; height: 28px; background: #2563EB; border: 2.5px solid #ffffff; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: 0 3px 10px rgba(0,0,0,0.5); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .df-pin::after { content: ''; position: absolute; width: 9px; height: 9px; background: #fff; border-radius: 50%; top: 7px; left: 7px; }
+    .leaflet-marker-icon:hover .df-pin { transform: rotate(-45deg) scale(1.15); box-shadow: 0 5px 14px rgba(0,0,0,0.6); }
+    .df-pin.active { background: #FFC928; transform: rotate(-45deg) scale(1.18); }
+    .hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(8,15,32,0.95) 0%, rgba(8,15,32,0.80) 38%, rgba(8,15,32,0.45) 65%, rgba(8,15,32,0.15) 100%), linear-gradient(180deg, rgba(8,15,32,0.5) 0%, transparent 30%, transparent 70%, rgba(8,15,32,0.6) 100%); pointer-events: none; z-index: 1; transition: opacity 0.45s ease; }
+    .hero.focus-map .hero-bg::after { opacity: 0.14; }
+    .hero-glow { position: absolute; width: 600px; height: 500px; border-radius: 50%; background: radial-gradient(ellipse, rgba(37,99,235,0.14) 0%, transparent 70%); top: 50%; left: -80px; transform: translateY(-50%); pointer-events: none; z-index: 2; transition: opacity 0.45s ease; }
+    .hero.focus-map .hero-glow { opacity: 0; }
+    .hero-inner { position: relative; z-index: 3; width: 100%; max-width: 620px; padding: 80px 0 100px; transition: opacity 0.45s ease, transform 0.45s ease, visibility 0s linear 0s; }
+    .hero.focus-map .hero-inner { opacity: 0; transform: translateY(10px); visibility: hidden; pointer-events: none; transition: opacity 0.45s ease, transform 0.45s ease, visibility 0s linear 0.45s; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; background: rgba(255,201,40,0.1); border: 1px solid rgba(255,201,40,0.3); border-radius: 100px; font-size: 0.75rem; font-weight: 700; color: #FFC928; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 20px; }
+    .hero-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: #FFC928; animation: pulse-dot 2.2s infinite; }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.75); } }
+    .hero h1 { font-size: clamp(2.3rem, 5vw, 3.75rem); font-weight: 800; color: #fff; line-height: 1.08; letter-spacing: -0.04em; margin-bottom: 20px; max-width: 600px; text-shadow: 0 0 40px rgba(37,99,235,0.45), 0 0 80px rgba(37,99,235,0.20), 0 2px 12px rgba(0,0,0,0.6); }
+    .hero h1 .accent { background: linear-gradient(135deg, #FFC928 0%, #FFAA00 35%, #60A5FA 75%, #2563EB 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 18px rgba(255,201,40,0.55)) drop-shadow(0 0 40px rgba(37,99,235,0.35)); }
+    .hero-sub { font-size: 1.0625rem; color: rgba(203,213,225,0.9); line-height: 1.7; max-width: 480px; margin-bottom: 36px; }
+    .hero-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
+    .btn-hero-primary { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: #2563EB; color: #fff; border: none; border-radius: 10px; font-size: 0.9375rem; font-weight: 700; cursor: pointer; text-decoration: none; transition: background 0.15s, transform 0.15s, box-shadow 0.15s; box-shadow: 0 4px 18px rgba(37,99,235,0.45); }
+    .btn-hero-primary:hover { background: #1D4ED8; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,99,235,0.55); }
+    .btn-hero-ghost { display: inline-flex; align-items: center; gap: 8px; padding: 13px 24px; background: rgba(8,15,32,0.5); color: #fff; border: 1.5px solid rgba(255,255,255,0.28); border-radius: 10px; font-size: 0.9375rem; font-weight: 600; cursor: pointer; backdrop-filter: blur(10px); transition: background 0.15s, border-color 0.15s; text-decoration: none; }
+    .btn-hero-ghost:hover { background: rgba(8,15,32,0.75); border-color: rgba(255,255,255,0.55); }
+    .hero-trust { display: flex; flex-wrap: wrap; gap: 8px; }
+    .hero-restore { position: absolute; right: 28px; bottom: 56px; z-index: 5; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.28); background: rgba(8,15,32,0.82); color: #fff; font: 700 0.82rem 'Plus Jakarta Sans', sans-serif; cursor: pointer; backdrop-filter: blur(10px); opacity: 0; visibility: hidden; transform: translateY(8px); transition: opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0.35s, background 0.2s; }
+    .hero-restore:hover { background: rgba(37,99,235,0.9); }
+    .hero.focus-map .hero-restore { opacity: 1; visibility: visible; transform: none; transition: opacity 0.35s ease 0.2s, transform 0.35s ease 0.2s, visibility 0s, background 0.2s; }
 
-    .df-pin {
-      width: 30px; height: 30px;
-      background: #16a34a;
-      border: 2px solid #ffffff;
-      border-radius: 50% 50% 50% 0;
-      transform: rotate(-45deg);
-      box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .df-pin::after {
-      content: '';
-      position: absolute;
-      width: 10px; height: 10px;
-      background: #ffffff;
-      border-radius: 50%;
-      top: 8px; left: 8px;
-    }
-    .leaflet-marker-icon:hover .df-pin {
-      transform: rotate(-45deg) scale(1.12);
-      box-shadow: 0 5px 12px rgba(0,0,0,0.5);
-    }
-
-    .df-pin.active { background: #2563eb; transform: rotate(-45deg) scale(1.15); }
-
-    /* ── PROPERTY SIDE PANEL (opens when a map pin is clicked) ── */
-    .dp {
-      position: absolute;
-      top: 64px; left: 0; bottom: 0;
-      width: 384px; max-width: 100%;
-      background: #ffffff;
-      color: #0f172a;
-      z-index: 6;
-      display: flex;
-      flex-direction: column;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      box-shadow: 4px 0 28px rgba(0,0,0,0.38);
-      transform: translateX(-104%);
-      visibility: hidden;
-      transition: transform 0.3s ease, visibility 0s linear 0.3s;
-    }
+    /* ── PROPERTY SIDE PANEL ─────────────────────────────── */
+    .dp { position: absolute; top: 68px; left: 0; bottom: 0; width: 384px; max-width: 100%; background: #fff; color: #0f172a; z-index: 6; display: flex; flex-direction: column; font-family: 'Plus Jakarta Sans', sans-serif; box-shadow: 4px 0 32px rgba(0,0,0,0.42); transform: translateX(-104%); visibility: hidden; transition: transform 0.3s ease, visibility 0s linear 0.3s; }
     .dp.open { transform: none; visibility: visible; transition: transform 0.3s ease, visibility 0s; }
     .dp-scroll { flex: 1; overflow-y: auto; overscroll-behavior: contain; }
     .dp * { box-sizing: border-box; }
-
     .dp-photo { position: relative; height: 200px; background: #e2e8f0; }
     .dp-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .dp-photo::after {
-      content: ''; position: absolute; inset: 0; pointer-events: none;
-      background: linear-gradient(180deg, rgba(15,23,42,0.35) 0%, rgba(15,23,42,0) 40%, rgba(15,23,42,0.35) 100%);
-    }
-    .dp-close {
-      position: absolute; top: 12px; right: 12px; z-index: 2;
-      width: 34px; height: 34px; border-radius: 50%;
-      border: 0; background: #ffffff; color: #0f172a; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
+    .dp-photo::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(15,23,42,0.3) 0%, rgba(15,23,42,0) 40%, rgba(15,23,42,0.3) 100%); }
+    .dp-close { position: absolute; top: 12px; right: 12px; z-index: 2; width: 34px; height: 34px; border-radius: 50%; border: 0; background: #fff; color: #0f172a; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
     .dp-close:hover { background: #f1f5f9; }
-    .dp-seephotos {
-      position: absolute; left: 12px; bottom: 12px; z-index: 2;
-      display: inline-flex; align-items: center; gap: 7px;
-      padding: 7px 13px; border-radius: 100px; border: 0; cursor: pointer;
-      background: rgba(15,23,42,0.72); color: #ffffff;
-      font: 700 0.78rem 'Plus Jakarta Sans', sans-serif;
-      backdrop-filter: blur(4px);
-    }
-    .dp-price {
-      position: absolute; right: 12px; bottom: 12px; z-index: 2;
-      background: #ffffff; border-radius: 10px; padding: 6px 12px; text-align: right;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    }
+    .dp-seephotos { position: absolute; left: 12px; bottom: 12px; z-index: 2; display: inline-flex; align-items: center; gap: 7px; padding: 7px 13px; border-radius: 100px; border: 0; cursor: pointer; background: rgba(15,23,42,0.72); color: #fff; font: 700 0.78rem 'Plus Jakarta Sans', sans-serif; backdrop-filter: blur(4px); }
+    .dp-price { position: absolute; right: 12px; bottom: 12px; z-index: 2; background: #fff; border-radius: 10px; padding: 6px 12px; text-align: right; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
     .dp-price b { display: block; font-size: 1.05rem; font-weight: 800; color: #0f172a; line-height: 1.2; }
     .dp-price small { font-size: 0.68rem; font-weight: 600; color: #64748b; }
-
     .dp-head { padding: 16px 20px 12px; }
-    .dp-name { margin: 0; font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em; color: #0f172a; line-height: 1.25; }
+    .dp-name { margin: 0; font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; color: #0f172a; line-height: 1.25; }
     .dp-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 6px; font-size: 0.82rem; color: #475569; font-weight: 600; }
-    .dp-stars { color: #f59e0b; letter-spacing: 1px; }
-    .dp-slots {
-      display: inline-block; margin-top: 10px;
-      background: #dcfce7; color: #15803d; font-size: 0.74rem; font-weight: 800;
-      padding: 4px 10px; border-radius: 6px;
-    }
+    .dp-stars { color: #FFC928; letter-spacing: 1px; }
+    .dp-slots { display: inline-block; margin-top: 10px; font-size: 0.74rem; font-weight: 800; padding: 4px 10px; border-radius: 6px; }
+    .dp-slots.avail { background: #dcfce7; color: #15803d; }
     .dp-slots.low { background: #fef3c7; color: #d97706; }
     .dp-slots.none { background: #fee2e2; color: #dc2626; }
-
     .dp-tabs { display: flex; border-bottom: 1px solid #e2e8f0; padding: 0 8px; }
-    .dp-tab {
-      flex: 1; padding: 12px 6px; background: none; border: 0; cursor: pointer;
-      border-bottom: 3px solid transparent;
-      font: 700 0.85rem 'Plus Jakarta Sans', sans-serif; color: #64748b;
-    }
-    .dp-tab.active { color: #2563eb; border-bottom-color: #2563eb; }
-
+    .dp-tab { flex: 1; padding: 12px 6px; background: none; border: 0; cursor: pointer; border-bottom: 3px solid transparent; font: 700 0.85rem 'Plus Jakarta Sans', sans-serif; color: #64748b; }
+    .dp-tab.active { color: #2563EB; border-bottom-color: #2563EB; }
     .dp-actions { display: flex; justify-content: space-around; padding: 16px 12px 6px; }
-    .dp-act {
-      display: flex; flex-direction: column; align-items: center; gap: 7px;
-      background: none; border: 0; cursor: pointer; text-decoration: none;
-      font: 600 0.74rem 'Plus Jakarta Sans', sans-serif; color: #2563eb;
-      width: 76px;
-    }
-    .dp-act .ic {
-      width: 42px; height: 42px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      background: #dbeafe; color: #2563eb; transition: background 0.2s, color 0.2s;
-    }
-    .dp-act.primary .ic { background: #2563eb; color: #ffffff; }
+    .dp-act { display: flex; flex-direction: column; align-items: center; gap: 7px; background: none; border: 0; cursor: pointer; text-decoration: none; font: 600 0.74rem 'Plus Jakarta Sans', sans-serif; color: #2563EB; width: 76px; }
+    .dp-act .ic { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #dbeafe; color: #2563EB; transition: background 0.2s, color 0.2s; }
+    .dp-act.primary .ic { background: #2563EB; color: #fff; }
     .dp-act:hover .ic { background: #bfdbfe; }
     .dp-act.primary:hover .ic { background: #1d4ed8; }
-
-    .dp-cta {
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      margin: 12px 20px 4px; padding: 12px; border-radius: 100px;
-      background: #2563eb; color: #ffffff; text-decoration: none;
-      font: 700 0.92rem 'Plus Jakarta Sans', sans-serif;
-      transition: background 0.2s;
-    }
+    .dp-cta { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 12px 20px 4px; padding: 12px; border-radius: 100px; background: #2563EB; color: #fff; text-decoration: none; font: 700 0.92rem 'Plus Jakarta Sans', sans-serif; transition: background 0.2s; }
     .dp-cta:hover { background: #1d4ed8; }
-
     .dp-pane { display: none; padding: 8px 20px 24px; }
     .dp-pane.active { display: block; }
-    .dp-row {
-      display: flex; align-items: flex-start; gap: 18px;
-      padding: 14px 0; border-bottom: 1px solid #f1f5f9;
-      font-size: 0.86rem; font-weight: 500; color: #1e293b; line-height: 1.45;
-      word-break: break-word;
-    }
+    .dp-row { display: flex; align-items: flex-start; gap: 18px; padding: 14px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.86rem; font-weight: 500; color: #1e293b; line-height: 1.45; word-break: break-word; }
     .dp-row:last-child { border-bottom: 0; }
-    .dp-row svg { flex-shrink: 0; margin-top: 1px; color: #2563eb; }
-    .dp-row a { color: #2563eb; text-decoration: none; font-weight: 600; }
+    .dp-row svg { flex-shrink: 0; margin-top: 1px; color: #2563EB; }
+    .dp-row a { color: #2563EB; text-decoration: none; font-weight: 600; }
     .dp-row a:hover { text-decoration: underline; }
     .dp-label { margin: 18px 0 8px; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #64748b; }
     .dp-label:first-child { margin-top: 10px; }
@@ -308,810 +124,197 @@
     .dp-chip .t.free { color: #15803d; }
     .dp-chip .t.paid { color: #b45309; }
     .dp-rules { background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 12px 14px; font-size: 0.85rem; color: #78350f; white-space: pre-line; word-break: break-word; }
-    .dp-room {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 14px; margin-bottom: 8px;
-      border: 1px solid #e2e8f0; border-radius: 12px; font-size: 0.86rem;
-    }
+    .dp-room { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; margin-bottom: 8px; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 0.86rem; }
     .dp-room b { font-weight: 800; color: #0f172a; }
-    .dp-room small { display: block; color: #2563eb; font-weight: 700; font-size: 0.78rem; margin-top: 2px; }
+    .dp-room small { display: block; color: #2563EB; font-weight: 700; font-size: 0.78rem; margin-top: 2px; }
     .dp-room .st { font-size: 0.75rem; font-weight: 800; }
     .dp-room .st.ok { color: #16a34a; }
     .dp-room .st.no { color: #dc2626; }
-    .dp-room.taken { opacity: 0.55; background: #f8fafc; }
-    .dp-toast {
-      position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 5;
-      background: #0f172a; color: #ffffff; border-radius: 10px; padding: 11px 14px;
-      font-size: 0.82rem; font-weight: 600; text-align: center;
-      opacity: 0; pointer-events: none; transform: translateY(8px);
-      transition: opacity 0.2s, transform 0.2s;
-    }
+    .dp-room.taken { opacity: 0.5; background: #f8fafc; }
+    .dp-toast { position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 5; background: #0f172a; color: #fff; border-radius: 10px; padding: 11px 14px; font-size: 0.82rem; font-weight: 600; text-align: center; opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity 0.2s, transform 0.2s; }
     .dp-toast.show { opacity: 1; transform: none; }
     .dp-toast a { color: #93c5fd; font-weight: 700; }
+    @media (max-width: 700px) { .dp { top: auto; width: 100%; height: 72%; border-radius: 18px 18px 0 0; transform: translateY(104%); } .dp.open { transform: none; } }
 
-    @media (max-width: 700px) {
-      .dp {
-        top: auto; width: 100%; height: 72%;
-        border-radius: 18px 18px 0 0;
-        transform: translateY(104%);
-      }
-      .dp.open { transform: none; }
-    }
+    /* ── FEATURED ACCOMMODATIONS ─────────────────────────── */
+    .featured-section { background: #080F20; padding: 96px 0; border-top: 1px solid rgba(203,213,225,0.07); }
+    .featured-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 48px; flex-wrap: wrap; }
+    .view-all-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.875rem; font-weight: 700; color: #2563EB; text-decoration: none; white-space: nowrap; transition: color 0.15s; }
+    .view-all-link:hover { color: #93C5FD; }
+    .featured-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .featured-empty { grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(203,213,225,0.15); border-radius: 16px; }
+    .featured-empty p { color: rgba(203,213,225,0.5); font-size: 0.95rem; margin-bottom: 16px; }
+    .featured-loading { grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; gap: 12px; padding: 60px 20px; color: rgba(203,213,225,0.4); font-size: 0.9rem; font-weight: 600; }
+    .spin { width: 20px; height: 20px; border: 2px solid rgba(203,213,225,0.15); border-top-color: #2563EB; border-radius: 50%; animation: spin 0.75s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .hero-bg::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        110deg,
-        rgba(6,13,31,0.88) 0%,
-        rgba(13,27,62,0.70) 45%,
-        rgba(13,27,62,0.40) 100%
-      );
-      pointer-events: none;
-      z-index: 1;
-    }
+    /* ── WHY DORMFINDER ──────────────────────────────────── */
+    .why-section { background: #111B30; padding: 80px 0; border-top: 1px solid rgba(203,213,225,0.07); border-bottom: 1px solid rgba(203,213,225,0.07); }
+    .why-header { text-align: center; margin-bottom: 52px; }
+    .why-header .section-title { margin-bottom: 0; }
+    .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .why-card { background: #0D1829; border: 1px solid rgba(203,213,225,0.09); border-radius: 18px; padding: 36px 30px; display: flex; flex-direction: column; gap: 14px; transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s; }
+    .why-card:hover { border-color: rgba(37,99,235,0.4); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
+    .why-icon { width: 52px; height: 52px; border-radius: 14px; background: #2563EB; display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
+    .why-card h3 { font-size: 1.125rem; font-weight: 700; color: #fff; letter-spacing: -0.02em; line-height: 1.3; }
+    .why-card p { font-size: 0.9rem; color: rgba(203,213,225,0.65); line-height: 1.7; }
 
-    .hero-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      pointer-events: none;
-      z-index: 2;
-    }
-    .hero-orb-1 {
-      width: 500px; height: 500px;
-      background: rgba(49,76,117,0.22);
-      top: -100px; left: -150px;
-    }
-    .hero-orb-2 {
-      width: 350px; height: 350px;
-      background: rgba(96,165,250,0.12);
-      bottom: 50px; right: 100px;
-    }
-
-    .hero-inner {
-      position: relative;
-      z-index: 3;
-      width: 100%;
-      padding: 80px 0 100px;
-      pointer-events: none;
-      transition: opacity 0.45s ease, transform 0.45s ease, visibility 0s linear 0s;
-    }
-
-    /* Map-focus mode: click the map background to fade the hero text out */
-    .hero.focus-map .hero-inner {
-      opacity: 0;
-      transform: translateY(10px);
-      visibility: hidden;
-      transition: opacity 0.45s ease, transform 0.45s ease, visibility 0s linear 0.45s;
-    }
-    .hero.focus-map .hero-inner * { pointer-events: none !important; }
-    .hero.focus-map .scroll-cue { opacity: 0; }
-    .scroll-cue { transition: opacity 0.45s ease; }
-    .hero-bg::after { transition: opacity 0.45s ease; }
-    .hero.focus-map .hero-bg::after { opacity: 0.12; }
-    .hero.focus-map .hero-orb { opacity: 0; }
-    .hero-orb { transition: opacity 0.45s ease; }
-
-    .hero-restore {
-      position: absolute;
-      right: 28px; bottom: 56px;
-      z-index: 5;
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 10px 18px;
-      border-radius: 100px;
-      border: 1px solid rgba(255,255,255,0.28);
-      background: rgba(6,13,31,0.82);
-      color: #ffffff;
-      font: 700 0.82rem 'Plus Jakarta Sans', sans-serif;
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      opacity: 0; visibility: hidden; transform: translateY(8px);
-      transition: opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0.35s, background 0.2s;
-    }
-    .hero-restore:hover { background: rgba(37,99,235,0.9); }
-    .hero.focus-map .hero-restore {
-      opacity: 1; visibility: visible; transform: none;
-      transition: opacity 0.35s ease 0.2s, transform 0.35s ease 0.2s, visibility 0s, background 0.2s;
-    }
-
-    .hero-inner h1, 
-    .hero-inner p, 
-    .hero-inner div, 
-    .hero-inner a, 
-    .hero-inner button {
-      pointer-events: auto;
-    }
-
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 5px 13px;
-      background: rgba(49,76,117,0.40);
-      border: 1px solid rgba(96,165,250,0.40);
-      border-radius: 100px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: #93c5fd;
-      letter-spacing: 0.04em;
-      margin-bottom: 20px;
-      backdrop-filter: blur(8px);
-    }
-
-    .hero-eyebrow .dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: #60a5fa;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.5; transform: scale(0.85); }
-    }
-
-    .hero h1 {
-      font-size: clamp(2.2rem, 5vw, 3.6rem);
-      font-weight: 800;
-      color: white;
-      line-height: 1.1;
-      letter-spacing: -0.04em;
-      margin-bottom: 20px;
-      max-width: 680px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    }
-
-    .hero h1 .accent {
-      color: #fbbf24;
-      position: relative;
-    }
-
-    .hero-sub {
-      font-size: 1.05rem;
-      color: rgba(255,255,255,0.85);
-      line-height: 1.7;
-      max-width: 500px;
-      margin-bottom: 36px;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.5);
-    }
-
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .btn-hero-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 28px;
-      background: #1461d4;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 4px 16px rgba(49,76,117,0.45);
-    }
-    .btn-hero-primary:hover {
-      background: #263c5d;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(49,76,117,0.50);
-    }
-
-    .btn-hero-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 13px 24px;
-      background: rgba(6,13,31,0.65);
-      color: white;
-      border: 1.5px solid rgba(255,255,255,0.30);
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      backdrop-filter: blur(8px);
-      transition: background 0.15s, border-color 0.15s;
-      text-decoration: none;
-    }
-    .btn-hero-ghost:hover { background: rgba(6,13,31,0.85); border-color: rgba(255,255,255,0.60); }
-
-    .hero-stats {
-      display: flex;
-      gap: 40px;
-      margin-top: 56px;
-      padding-top: 40px;
-      border-top: 1px solid rgba(255,255,255,0.20);
-      flex-wrap: wrap;
-      background: rgba(6,13,31,0.45);
-      padding: 24px;
-      border-radius: 14px;
-      backdrop-filter: blur(8px);
-      max-width: 680px;
-    }
-
-    .hero-stat h3 {
-      font-size: 1.9rem;
-      font-weight: 800;
-      color: white;
-      letter-spacing: -0.04em;
-      line-height: 1;
-    }
-    .hero-stat p {
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.75);
-      margin-top: 4px;
-      font-weight: 500;
-    }
-
-    .scroll-cue {
-      position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 3;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      color: rgba(255,255,255,0.65);
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      font-weight: 600;
-      text-transform: uppercase;
-      animation: bounce 2.2s infinite;
-      pointer-events: none;
-    }
-    .scroll-cue svg { opacity: 0.8; }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50%       { transform: translateX(-50%) translateY(6px); }
-    }
-
-    /* ── SECTION SHARED ──────────────────────────────────────── */
-    .section-label {
-      display: inline-block;
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: #93c5fd;
-      margin-bottom: 10px;
-    }
-
-    .section-title {
-      font-size: clamp(1.6rem, 3vw, 2.2rem);
-      font-weight: 800;
-      color: white;
-      letter-spacing: -0.03em;
-      line-height: 1.2;
-      margin-bottom: 12px;
-    }
-
-    .section-sub {
-      font-size: 0.95rem;
-      color: rgba(255,255,255,0.50);
-      line-height: 1.7;
-      max-width: 520px;
-    }
-
-    /* ── HOW IT WORKS ────────────────────────────────────────── */
-    .how-section {
-      background: #0a1428;
-      padding: 96px 0;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .how-header { text-align: center; margin-bottom: 60px; }
-    .how-header .section-sub { margin: 0 auto; }
-
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      position: relative;
-    }
-
-    .steps-grid::before {
-      content: '';
-      position: absolute;
-      top: 28px;
-      left: calc(16.6% + 8px);
-      right: calc(16.6% + 8px);
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(96,165,250,0.4), rgba(96,165,250,0.4), transparent);
-    }
-
-    .step-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      padding: 28px 24px;
-      text-align: center;
-      transition: background 0.2s, border-color 0.2s, transform 0.2s;
-    }
-    .step-card:hover {
-      background: rgba(49,76,117,0.12);
-      border-color: rgba(96,165,250,0.30);
-      transform: translateY(-3px);
-    }
-
-    .step-num {
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      background: #0d1b3e;
-      border: 2px solid rgba(96,165,250,0.40);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      font-weight: 800;
-      color: #93c5fd;
-      margin: 0 auto 18px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .step-icon {
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      background: rgba(49,76,117,0.22);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 14px;
-      color: #93c5fd;
-    }
-
-    .step-card h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: white;
-      margin-bottom: 8px;
-      letter-spacing: -0.02em;
-    }
-
-    .step-card p {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.48);
-      line-height: 1.65;
-    }
-
-    /* ── FEATURES ────────────────────────────────────────────── */
-    .features-section {
-      background: #0a1428;
-      padding: 96px 0;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      margin-top: 52px;
-    }
-
-    .feature-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 16px;
-      padding: 28px;
-      transition: background 0.2s, border-color 0.2s, transform 0.2s;
-    }
-    .feature-card:hover {
-      background: rgba(49,76,117,0.10);
-      border-color: rgba(96,165,250,0.25);
-      transform: translateY(-2px);
-    }
-
-    .feature-card-icon {
-      width: 48px; height: 48px;
-      border-radius: 12px;
-      background: rgba(49,76,117,0.22);
-      border: 1px solid rgba(96,165,250,0.30);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #93c5fd;
-      margin-bottom: 16px;
-    }
-
-    .feature-card h3 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: white;
-      letter-spacing: -0.02em;
-      margin-bottom: 8px;
-    }
-
-    .feature-card p {
-      font-size: 0.875rem;
-      color: rgba(255,255,255,0.48);
-      line-height: 1.7;
-    }
-
-    /* ── MAP SECTION ─────────────────────────────────────────── */
-    .map-section {
-      background: #060d1f;
-      padding: 96px 0;
-    }
-
-    .map-layout {
-      display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 48px;
-      align-items: center;
-    }
-
-    .map-frame-wrap {
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.10);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.50);
-      position: relative;
-    }
-
-    .map-frame-wrap::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 16px;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.07);
-      pointer-events: none;
-    }
-
-    #areaMap { width: 100%; height: 380px; background: #0b1630; }
-    #areaMap .leaflet-tile-pane {
-      filter: invert(90%) hue-rotate(180deg) brightness(88%) contrast(130%);
-    }
-    .df-area-popup { font-family: 'Plus Jakarta Sans', sans-serif; min-width: 160px; }
+    /* ── MAP SECTION ─────────────────────────────────────── */
+    .map-section { background: #111B30; padding: 96px 0; border-top: 1px solid rgba(203,213,225,0.07); }
+    .map-layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 56px; align-items: center; }
+    .map-frame-wrap { border-radius: 18px; overflow: hidden; border: 1px solid rgba(203,213,225,0.1); box-shadow: 0 20px 60px rgba(0,0,0,0.55); position: relative; }
+    .map-frame-wrap::after { content: ''; position: absolute; inset: 0; border-radius: 18px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05); pointer-events: none; }
+    #areaMap { width: 100%; height: 400px; background: #0b1630; }
+    #areaMap .leaflet-tile-pane { filter: invert(90%) hue-rotate(180deg) brightness(82%) contrast(130%); }
+    .df-area-popup { font-family: 'Plus Jakarta Sans', sans-serif; min-width: 170px; }
     .df-area-popup strong { display: block; font-size: 0.92rem; color: #0f172a; margin-bottom: 2px; }
     .df-area-popup span { display: block; font-size: 0.78rem; color: #64748b; }
-    .df-area-popup a { display: inline-block; margin-top: 6px; font-size: 0.8rem; font-weight: 700; color: #2563eb; text-decoration: none; }
+    .df-area-popup a { display: inline-block; margin-top: 6px; font-size: 0.8rem; font-weight: 700; color: #2563EB; text-decoration: none; }
+    .map-legend { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+    .map-legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.875rem; color: rgba(203,213,225,0.65); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
-    .map-legend {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 28px;
-    }
+    /* ── CTA BANNER ──────────────────────────────────────── */
+    .cta-section { display: grid; grid-template-columns: 1fr 1fr; min-height: 240px; }
+    .cta-left { background: #2563EB; padding: 64px 56px; display: flex; flex-direction: column; justify-content: center; gap: 16px; position: relative; overflow: hidden; }
+    .cta-left::before { content: ''; position: absolute; width: 300px; height: 300px; border-radius: 50%; background: rgba(255,255,255,0.08); top: -80px; right: -80px; pointer-events: none; }
+    .cta-left h2 { font-size: clamp(1.5rem, 2.5vw, 2.1rem); font-weight: 800; color: #fff; letter-spacing: -0.03em; line-height: 1.2; position: relative; }
+    .cta-left p { font-size: 0.95rem; color: rgba(255,255,255,0.75); line-height: 1.6; max-width: 360px; position: relative; }
+    .cta-left .btn-cta { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; background: #fff; color: #2563EB; border-radius: 10px; font-size: 0.9375rem; font-weight: 700; text-decoration: none; width: fit-content; transition: background 0.15s, transform 0.15s; position: relative; }
+    .cta-left .btn-cta:hover { background: #EFF6FF; transform: translateY(-1px); }
+    .cta-right { background: #FFC928; padding: 64px 56px; display: flex; flex-direction: column; justify-content: center; gap: 16px; position: relative; overflow: hidden; }
+    .cta-right::before { content: ''; position: absolute; width: 260px; height: 260px; border-radius: 50%; background: rgba(8,15,32,0.07); bottom: -60px; left: -60px; pointer-events: none; }
+    .cta-right h2 { font-size: clamp(1.5rem, 2.5vw, 2.1rem); font-weight: 800; color: #080F20; letter-spacing: -0.03em; line-height: 1.2; position: relative; }
+    .cta-right p { font-size: 0.95rem; color: rgba(8,15,32,0.65); line-height: 1.6; max-width: 360px; position: relative; }
+    .cta-right .btn-cta { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; background: #080F20; color: #FFC928; border-radius: 10px; font-size: 0.9375rem; font-weight: 700; text-decoration: none; width: fit-content; transition: background 0.15s, transform 0.15s; position: relative; }
+    .cta-right .btn-cta:hover { background: #111B30; transform: translateY(-1px); }
 
-    .map-legend-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.60);
-    }
-
-    .legend-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    /* ── CONTACT ─────────────────────────────────────────────── */
-    .contact-section {
-      background: #0a1428;
-      padding: 96px 0;
-      border-top: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.1fr;
-      gap: 64px;
-      align-items: start;
-    }
-
-    .contact-info-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      padding: 18px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-    }
+    /* ── CONTACT ─────────────────────────────────────────── */
+    .contact-section { background: #111B30; padding: 96px 0; border-top: 1px solid rgba(203,213,225,0.07); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 64px; align-items: start; }
+    .contact-info-item { display: flex; align-items: flex-start; gap: 14px; padding: 18px 0; border-bottom: 1px solid rgba(203,213,225,0.08); }
     .contact-info-item:last-child { border-bottom: none; }
+    .contact-info-icon { width: 42px; height: 42px; border-radius: 10px; background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.2); display: flex; align-items: center; justify-content: center; color: #93C5FD; flex-shrink: 0; }
+    .contact-info-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(203,213,225,0.4); margin-bottom: 3px; }
+    .contact-info-val { font-size: 0.9rem; font-weight: 600; color: rgba(203,213,225,0.85); }
+    .contact-form-wrap { background: rgba(255,255,255,0.03); border: 1px solid rgba(203,213,225,0.09); border-radius: 20px; padding: 32px; }
+    .contact-form-wrap h3 { font-size: 1.125rem; font-weight: 700; color: #fff; letter-spacing: -0.02em; margin-bottom: 24px; }
+    .contact-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .contact-fg { margin-bottom: 14px; min-width: 0; }
+    .btn-send { width: 100%; padding: 12px; background: #2563EB; color: #fff; border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 700; font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: background 0.15s, transform 0.15s; margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-send:hover { background: #1D4ED8; transform: translateY(-1px); }
+    .btn-send:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .contact-success { display: none; text-align: center; padding: 24px; }
+    .contact-success svg { margin: 0 auto 12px; color: #4ADE80; }
+    .contact-success h4 { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .contact-success p { font-size: 0.875rem; color: rgba(203,213,225,0.65); }
 
-    .contact-info-icon {
-      width: 42px; height: 42px;
-      border-radius: 10px;
-      background: rgba(49,76,117,0.22);
-      border: 1px solid rgba(96,165,250,0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #93c5fd;
-      flex-shrink: 0;
-    }
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer { background: #080F20; border-top: 1px solid rgba(255,201,40,0.12); padding: 56px 0 32px; }
+    .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+    .footer-brand-mark { width: 38px; height: 38px; background: #2563EB; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+    .footer-brand-name { font-size: 1.125rem; font-weight: 800; color: #fff; letter-spacing: -0.04em; margin-bottom: 10px; }
+    .footer-brand-name .gold { color: #FFC928; }
+    .footer-desc { font-size: 0.82rem; color: rgba(203,213,225,0.38); line-height: 1.7; max-width: 240px; }
+    .footer-col-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #FFC928; margin-bottom: 16px; }
+    .footer-link { display: block; font-size: 0.85rem; color: rgba(203,213,225,0.5); margin-bottom: 10px; cursor: pointer; text-decoration: none; transition: color 0.15s; }
+    .footer-link:hover { color: #fff; }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; padding-top: 28px; border-top: 1px solid rgba(255,201,40,0.1); flex-wrap: wrap; gap: 10px; }
+    .footer-copy { font-size: 0.78rem; color: rgba(203,213,225,0.3); }
+    .footer-scope { font-size: 0.78rem; color: rgba(203,213,225,0.22); }
 
-    .contact-info-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: rgba(255,255,255,0.35);
-      margin-bottom: 3px;
-    }
+    /* ── MOBILE NAV DRAWER ──────────────────────────────────────────────── */
+    .nav-drawer { position: fixed; inset: 0; z-index: 998; display: flex; pointer-events: none; }
+    .nav-drawer-backdrop { position: absolute; inset: 0; background: rgba(8,15,32,0.7); backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.3s ease; }
+    .nav-drawer-panel { position: relative; z-index: 1; width: 280px; background: #111B30; height: 100%; padding: 24px 20px; display: flex; flex-direction: column; gap: 6px; transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); border-right: 1px solid rgba(203,213,225,0.08); }
+    .nav-drawer.open { pointer-events: all; }
+    .nav-drawer.open .nav-drawer-backdrop { opacity: 1; }
+    .nav-drawer.open .nav-drawer-panel { transform: translateX(0); }
+    .drawer-link { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 10px; color: rgba(203,213,225,0.7); font-size: 0.9375rem; font-weight: 600; transition: background 0.15s, color 0.15s; cursor: pointer; text-decoration: none; }
+    .drawer-link:hover { background: rgba(203,213,225,0.08); color: #fff; }
+    .drawer-divider { height: 1px; background: rgba(203,213,225,0.08); margin: 8px 0; }
 
-    .contact-info-val {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.80);
-    }
-
-    .contact-form-wrap {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 20px;
-      padding: 32px;
-    }
-
-    .contact-form-wrap h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: white;
-      letter-spacing: -0.02em;
-      margin-bottom: 22px;
-    }
-
-    .dark-label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.55);
-      margin-bottom: 5px;
-      letter-spacing: 0.01em;
-    }
-
-    .dark-input {
-      width: 100%;
-      padding: 10px 13px;
-      background: rgba(255,255,255,0.06);
-      border: 1.5px solid rgba(255,255,255,0.10);
-      border-radius: 8px;
-      color: white;
-      font-size: 0.875rem;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      outline: none;
-      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
-      -webkit-appearance: none;
-      box-sizing: border-box;
-    }
-    .dark-input::placeholder { color: rgba(255,255,255,0.28); }
-    .dark-input:focus {
-      border-color: rgba(96,165,250,0.55);
-      background: rgba(255,255,255,0.08);
-      box-shadow: 0 0 0 3px rgba(96,165,250,0.15);
-    }
-
-    .dark-textarea {
-      resize: vertical;
-      min-height: 110px;
-    }
-
-    .contact-form-row {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      width: 100%;
-    }
-
-    .contact-fg { 
-      margin-bottom: 14px; 
-      min-width: 0;
-    }
-
-    .btn-send {
-      width: 100%;
-      padding: 12px;
-      background: #314c75;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.15s;
-      margin-top: 4px;
-    }
-    .btn-send:hover { background: #263c5d; transform: translateY(-1px); }
-
-    /* ── CTA BANNER ──────────────────────────────────────────── */
-    .cta-section {
-      background: linear-gradient(135deg, #0d1b3e 0%, #314c75 50%, #0d1b3e 100%);
-      padding: 80px 0;
-      text-align: center;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-section::before {
-      content: '';
-      position: absolute;
-      width: 600px; height: 600px;
-      border-radius: 50%;
-      background: rgba(49,76,117,0.18);
-      filter: blur(80px);
-      top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      pointer-events: none;
-    }
-
-    .cta-section h2 {
-      font-size: clamp(1.6rem, 3vw, 2.4rem);
-      font-weight: 800;
-      color: white;
-      letter-spacing: -0.04em;
-      margin-bottom: 12px;
-      position: relative;
-    }
-
-    .cta-section p {
-      font-size: 0.95rem;
-      color: rgba(255,255,255,0.52);
-      max-width: 420px;
-      margin: 0 auto 32px;
-      line-height: 1.65;
-      position: relative;
-    }
-
-    .cta-btns {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-      position: relative;
-    }
-
-    /* ── FOOTER ──────────────────────────────────────────────── */
-    .footer {
-      background: #060d1f;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 56px 0 32px;
-    }
-
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 1.6fr 1fr 1fr 1fr;
-      gap: 40px;
-      margin-bottom: 48px;
-    }
-
-    .footer-brand-mark {
-      width: 38px; height: 38px;
-      background: #314c75;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 14px;
-    }
-
-    .footer-brand-name {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: white;
-      letter-spacing: -0.04em;
-      margin-bottom: 10px;
-    }
-    .footer-brand-name .gold { color: #fbbf24; }
-
-    .footer-desc {
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.38);
-      line-height: 1.7;
-      max-width: 240px;
-    }
-
-    .footer-col-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: rgba(255,255,255,0.35);
-      margin-bottom: 14px;
-    }
-
-    .footer-link {
-      display: block;
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.50);
-      margin-bottom: 9px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-    .footer-link:hover { color: white; }
-
-    .footer-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 28px;
-      border-top: 1px solid rgba(255,255,255,0.06);
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .footer-copy {
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.28);
-    }
-
-    .footer-scope {
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.22);
-    }
-
-    @media (max-width: 960px) {
-      .features-grid    { grid-template-columns: 1fr; }
-      .contact-grid     { grid-template-columns: 1fr; gap: 40px; }
-      .map-layout       { grid-template-columns: 1fr; }
-      .footer-grid      { grid-template-columns: 1fr 1fr; }
-      .steps-grid::before { display: none; }
-    }
-
-    @media (max-width: 640px) {
-      .steps-grid       { grid-template-columns: 1fr; }
-      .footer-grid      { grid-template-columns: 1fr; }
-      .hero h1          { font-size: 2rem; }
-      .contact-form-row { grid-template-columns: 1fr; }
-      .hero-stats       { gap: 24px; }
-      .nav-center       { display: none; }
-    }
+    /* ── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 1024px) { .featured-grid { grid-template-columns: repeat(2, 1fr); } .why-grid { grid-template-columns: repeat(2, 1fr); } .map-layout { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 768px) { .nav-center { display: none; } .nav-hamburger { display: flex; } .hero-inner { max-width: 100%; padding: 60px 0 80px; } .hero h1 { font-size: 2.2rem; } .featured-grid { grid-template-columns: 1fr; } .why-grid { grid-template-columns: 1fr; } .cta-section { grid-template-columns: 1fr; } .cta-left, .cta-right { padding: 48px 32px; } .contact-grid { grid-template-columns: 1fr; gap: 40px; } .contact-form-row { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .container { padding: 0 18px; } .hero h1 { font-size: 1.9rem; } .hero-actions { flex-direction: column; align-items: flex-start; } .hero-trust { gap: 6px; } .footer-grid { grid-template-columns: 1fr; } .cta-left, .cta-right { padding: 40px 24px; } }
   </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- ══ NAVBAR ════════════════════════════════════════════════ -->
 <nav class="land-nav" id="land-nav">
   <div class="container">
     <a class="nav-brand" href="#hero">
       <div class="nav-brand-mark">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M12 2L3 9v13h6v-7h6v7h6V9z"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2L3 9v13h6v-7h6v7h6V9z"/></svg>
       </div>
       Dorm<span class="gold">Finder</span>
     </a>
 
     <div class="nav-center">
-      <a class="land-nav-link" href="#dorms" onclick="browseOrScroll(event)">Browse Dorms</a>
-      <a class="land-nav-link" href="#how">How It Works</a>
-      <a class="land-nav-link" href="#features">Features</a>
+      <a class="land-nav-link" href="browser.html">Browse Accommodations</a>
+      <a class="land-nav-link" href="#why">Why DormFinder</a>
+      <a class="land-nav-link" href="#map">Location</a>
       <a class="land-nav-link" href="#contact">Contact</a>
     </div>
 
     <div class="nav-right" id="nav-right">
       <a class="btn-nav-outline" href="signin.html">Sign In</a>
-      <a class="btn-nav-solid" href="signup.html">Sign Up Free</a>
+      <a class="btn-nav-solid" href="signup.html">
+        Sign Up Free
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
     </div>
+
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- Mobile Nav Drawer -->
+<div class="nav-drawer" id="nav-drawer">
+  <div class="nav-drawer-backdrop" id="drawer-backdrop"></div>
+  <div class="nav-drawer-panel">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <span style="font-size:1.1rem;font-weight:800;color:#fff;letter-spacing:-0.03em">Dorm<span style="color:#FFC928">Finder</span></span>
+      <button id="drawer-close" style="width:32px;height:32px;border-radius:8px;border:1px solid rgba(203,213,225,0.15);background:transparent;color:rgba(203,213,225,0.7);display:flex;align-items:center;justify-content:center;cursor:pointer;" aria-label="Close menu">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <a class="drawer-link" href="browser.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Browse Accommodations
+    </a>
+    <a class="drawer-link" href="#why">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Why DormFinder
+    </a>
+    <a class="drawer-link" href="#map">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Location
+    </a>
+    <a class="drawer-link" href="#contact">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Contact
+    </a>
+    <div class="drawer-divider"></div>
+    <a class="drawer-link" href="signin.html" style="color:#93C5FD;">Sign In</a>
+    <a href="signup.html" style="display:block;margin-top:4px;padding:12px 14px;background:#2563EB;color:#fff;border-radius:10px;font-size:0.9375rem;font-weight:700;text-decoration:none;text-align:center;">Sign Up Free</a>
+  </div>
+</div>
+
+<!-- ══ HERO (MAP BACKGROUND) ════════════════════════════════ -->
 <section class="hero" id="hero">
   <div class="hero-bg">
-    <div id="heroMap" role="img" aria-label="Map of DormFinder listings in Minglanilla"></div>
+    <div id="heroMap" role="img" aria-label="Map of DormFinder listings in Minglanilla, Cebu"></div>
   </div>
-  <div class="hero-orb hero-orb-1"></div>
-  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-glow"></div>
 
-  <!-- Property panel: slides in from the left when a map pin is clicked -->
+  <!-- Property side panel -->
   <aside class="dp" id="dormPanel" aria-label="Property details" aria-hidden="true">
     <div class="dp-scroll" id="dpScroll"></div>
     <div class="dp-toast" id="dpToast" role="status"></div>
@@ -1120,210 +323,179 @@
   <div class="container hero-inner">
     <div class="hero-eyebrow">
       <span class="dot"></span>
-      Web-Based Dormitory Search & Management System
+      Minglanilla, Cebu &mdash; Student Housing
     </div>
 
     <h1>
-      Find Your <span class="accent">Ideal Dorm</span><br/>
-      Near Campus — Fast.
+      Find Your <span class="accent">Perfect Dorm</span><br/>
+      Near Campus.
     </h1>
 
     <p class="hero-sub">
-      Browse verified boarding houses and dormitories near your school. Filter by price, location, and amenities — then book in minutes.
+      Browse verified boarding houses and dormitories in Minglanilla. Filter by price, amenities, and location — then send a booking request in minutes.
     </p>
 
     <div class="hero-actions">
-      <button class="btn-hero-primary" id="hero-browse-btn" onclick="browseOrScroll(event)">
+      <a class="btn-hero-primary" href="browser.html">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Browse Dorms
-      </button>
-      <a class="btn-hero-ghost" href="#how">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        How It Works
+        Browse Accommodations
+      </a>
+      <a class="btn-hero-ghost" href="#why">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Why DormFinder
       </a>
     </div>
 
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <h3>50+</h3>
-        <p>Listed Dormitories</p>
-      </div>
-      <div class="hero-stat">
-        <h3>1</h3>
-        <p>Main Location (Minglanilla)</p>
-      </div>
-      <div class="hero-stat">
-        <h3>₱1,800</h3>
-        <p>Starting Price / Month</p>
-      </div>
-      <div class="hero-stat">
-        <h3>24/7</h3>
-        <p>Available to Browse</p>
-      </div>
+    <div class="hero-trust">
+      <span class="trust-chip">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Verified Listings
+      </span>
+      <span class="trust-chip">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Direct Booking
+      </span>
+      <span class="trust-chip">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Minglanilla Area
+      </span>
+      <span class="trust-chip">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Owner-Managed
+      </span>
     </div>
   </div>
 
-  <button class="hero-restore" id="heroRestore" type="button" aria-label="Show hero text">
+  <button class="hero-restore" id="heroRestore" type="button" aria-label="Show hero content">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="14" y2="12"/><line x1="4" y1="18" x2="18" y2="18"/></svg>
     Show info
   </button>
-
-  <div class="scroll-cue">
-    <span>Scroll</span>
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-  </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section class="how-section" id="how">
+<!-- ══ FEATURED ACCOMMODATIONS ══════════════════════════════ -->
+<section class="featured-section" id="dorms">
   <div class="container">
-    <div class="how-header">
-      <span class="section-label">Simple Process</span>
-      <h2 class="section-title">How DormFinder Works</h2>
-      <p class="section-sub">Finding your perfect dorm is as easy as three steps.</p>
+    <div class="featured-header reveal">
+      <div>
+        <span class="eyebrow">Available Now</span>
+        <h2 class="section-title">Browse Accommodations</h2>
+        <p class="section-sub">Real listings from verified property owners in Minglanilla, Cebu.</p>
+      </div>
+      <a class="view-all-link" href="browser.html">
+        View all listings
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
     </div>
 
-    <div class="steps-grid">
-      <div class="step-card">
-        <div class="step-num">1</div>
-        <div class="step-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        </div>
-        <h3>Browse & Filter</h3>
-        <p>Search dormitories by location, price range, and amenities. No account needed to browse.</p>
-      </div>
-      <div class="step-card">
-        <div class="step-num">2</div>
-        <div class="step-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
-        <h3>Inquire or Book</h3>
-        <p>Found one you like? Create a free account to message the owner or send a booking request.</p>
-      </div>
-      <div class="step-card">
-        <div class="step-num">3</div>
-        <div class="step-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        </div>
-        <h3>Move In</h3>
-        <p>Get approved by the owner, confirm your move-in date, and secure your new home near campus.</p>
+    <div class="featured-grid" id="featured-grid">
+      <div class="featured-loading">
+        <div class="spin"></div>
+        Loading listings…
       </div>
     </div>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section class="features-section" id="features">
+<!-- ══ WHY DORMFINDER ═════════════════════════════════════════ -->
+<section class="why-section" id="why">
   <div class="container">
-    <span class="section-label">Why DormFinder</span>
-    <h2 class="section-title">Everything you need to find the right dorm</h2>
-    <p class="section-sub">Built specifically for students and property owners near their campus.</p>
-
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <div class="why-header reveal">
+      <span class="eyebrow">Why DormFinder</span>
+      <h2 class="section-title">The smarter way to find student housing</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
         </div>
-        <h3>Smart Search & Filters</h3>
-        <p>Filter dormitories by rental price, location, room type, and specific amenities like WiFi, AC, CCTV, and parking.</p>
+        <h3>Map-First Search</h3>
+        <p>Every listing is pinned on a live map of Minglanilla. See exactly how far each dorm is from your campus before you leave home.</p>
       </div>
-      <div class="feature-card">
-        <div class="feature-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+      <div class="why-card reveal" style="transition-delay:0.1s">
+        <div class="why-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
         </div>
-        <h3>Interactive Location Map</h3>
-        <p>See exactly where each dormitory is located relative to your campus. Know the distance before you visit.</p>
+        <h3>Direct Booking Requests</h3>
+        <p>Message owners and submit booking requests entirely within the platform — no third party, no commission, no middleman.</p>
       </div>
-      <div class="feature-card">
-        <div class="feature-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4v16"/><path d="M2 8h18a2 2 0 0 1 2 2v10"/><path d="M2 17h20"/><path d="M6 8v9"/></svg>
+      <div class="why-card reveal" style="transition-delay:0.2s">
+        <div class="why-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
-        <h3>Real-Time Room Availability</h3>
-        <p>See how many rooms are still available before contacting an owner — no wasted trips or calls.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
-        <h3>Direct Messaging</h3>
-        <p>Message property owners directly through the platform — ask questions, negotiate, and confirm details.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
-        </div>
-        <h3>Booking Requests</h3>
-        <p>Submit a booking request directly through the app. Owners review and approve — all in one place.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-card-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="2" width="18" height="20" rx="2"/><path d="M9 22V12h6v10"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01"/></svg>
-        </div>
-        <h3>Owner Listing Management</h3>
-        <p>Property owners can add, update, and manage their listings — rooms, pricing, and availability — all in one dashboard.</p>
+        <h3>Admin-Vetted Listings</h3>
+        <p>Every property is reviewed and approved by an administrator before it goes public — so you only see real, verified accommodations.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- MAP SECTION -->
+<!-- ══ MAP / LOCATION ════════════════════════════════════════ -->
 <section class="map-section" id="map">
   <div class="container">
     <div class="map-layout">
-      <div>
-        <span class="section-label">Campus Proximity</span>
-        <h2 class="section-title">Find dorms<br/>near your school</h2>
+      <div class="reveal">
+        <span class="eyebrow">Campus Proximity</span>
+        <h2 class="section-title">Find dorms near your school</h2>
         <p class="section-sub" style="margin-bottom:28px">
-          All listed dormitories are located in Minglanilla near campus areas. See exact locations on the map below.
+          All listed dormitories are located in Minglanilla, Cebu. Explore exact locations on the map and get directions to any property.
         </p>
 
         <div class="map-legend">
           <div class="map-legend-item">
-            <div class="legend-dot" style="background:#60a5fa"></div>
-            Minglanilla, Cebu — Active Listings
+            <div class="legend-dot" style="background:#2563EB"></div>
+            Available — open for booking
           </div>
           <div class="map-legend-item">
-            <div class="legend-dot" style="background:#93c5fd"></div>
-            Available rooms right now
+            <div class="legend-dot" style="background:#FFC928"></div>
+            Reserved — currently held
+          </div>
+          <div class="map-legend-item">
+            <div class="legend-dot" style="background:#64748B"></div>
+            Taken — no vacancies
           </div>
         </div>
 
-        <div style="margin-top:28px">
-          <a class="btn-hero-primary" href="browser.html">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div style="margin-top:32px">
+          <a class="btn btn-yellow btn-lg" href="browser.html">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             See All Locations
           </a>
         </div>
       </div>
 
-      <div class="map-frame-wrap">
-        <div id="areaMap" role="img" aria-label="Map of DormFinder listings"></div>
+      <div class="map-frame-wrap reveal" style="transition-delay:0.15s">
+        <div id="areaMap" role="img" aria-label="Map of DormFinder listings in Minglanilla"></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CTA BANNER -->
+<!-- ══ CTA BANNER ════════════════════════════════════════════ -->
 <section class="cta-section">
-  <div class="container">
-    <h2>Ready to find your dorm?</h2>
-    <p>Join students who found their perfect place near campus through DormFinder.</p>
-    <div class="cta-btns">
-      <a class="btn-hero-primary" href="browser.html">
-        Browse Dorms Now
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
-      <a class="btn-hero-ghost" href="signin.html">Sign In</a>
-    </div>
+  <div class="cta-left">
+    <h2>Find your dorm today.</h2>
+    <p>Browse verified listings in Minglanilla and book directly with property owners — no middleman.</p>
+    <a class="btn-cta" href="browser.html">
+      Browse Accommodations
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </div>
+  <div class="cta-right">
+    <h2>Own a property?</h2>
+    <p>List your dormitory or boarding house and connect with student renters in Minglanilla.</p>
+    <a class="btn-cta" href="signup.html">
+      List Your Property
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
   </div>
 </section>
 
-<!-- CONTACT -->
+<!-- ══ CONTACT ════════════════════════════════════════════════ -->
 <section class="contact-section" id="contact">
   <div class="container">
     <div class="contact-grid">
-      <div>
-        <span class="section-label">Get In Touch</span>
+      <div class="reveal">
+        <span class="eyebrow">Get In Touch</span>
         <h2 class="section-title">Contact Us</h2>
         <p class="section-sub" style="margin-bottom:36px">
           Have questions about DormFinder? Want to list your property in Minglanilla? We'd love to hear from you.
@@ -1351,7 +523,7 @@
 
         <div class="contact-info-item">
           <div class="contact-info-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.07 6.07l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.07 6.07l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/></svg>
           </div>
           <div>
             <div class="contact-info-label">Phone</div>
@@ -1370,51 +542,60 @@
         </div>
       </div>
 
-      <div class="contact-form-wrap">
+      <div class="contact-form-wrap reveal" style="transition-delay:0.1s">
         <h3>Send us a message</h3>
-        <div class="contact-form-row">
-          <div class="contact-fg">
-            <label class="dark-label">Full Name</label>
-            <input type="text" class="dark-input" id="c-name" placeholder="Juan Dela Cruz"/>
+
+        <div id="contact-form-body">
+          <div class="contact-form-row">
+            <div class="contact-fg">
+              <label class="df-label" for="c-name">Full Name</label>
+              <input class="df-input" type="text" id="c-name" placeholder="Juan Dela Cruz"/>
+            </div>
+            <div class="contact-fg">
+              <label class="df-label" for="c-email">Email</label>
+              <input class="df-input" type="email" id="c-email" placeholder="you@email.com"/>
+            </div>
           </div>
           <div class="contact-fg">
-            <label class="dark-label">Email</label>
-            <input type="email" class="dark-input" id="c-email" placeholder="you@email.com"/>
+            <label class="df-label" for="c-subject">Subject</label>
+            <input class="df-input" type="text" id="c-subject" placeholder="e.g. Question about listing a property"/>
           </div>
+          <div class="contact-fg">
+            <label class="df-label" for="c-message">Message</label>
+            <textarea class="df-input" id="c-message" rows="4" style="resize:vertical;min-height:110px" placeholder="Tell us how we can help…"></textarea>
+          </div>
+          <button class="btn-send" id="btn-send" onclick="sendContact()">
+            Send Message
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
         </div>
-        <div class="contact-fg">
-          <label class="dark-label">Subject</label>
-          <input type="text" class="dark-input" id="c-subject" placeholder="e.g. Question about listing a property"/>
+
+        <div class="contact-success" id="contact-success">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+          <h4>Message received!</h4>
+          <p>Thanks for reaching out. We'll get back to you within 24 hours.</p>
         </div>
-        <div class="contact-fg">
-          <label class="dark-label">Message</label>
-          <textarea class="dark-input dark-textarea" id="c-message" placeholder="Tell us how we can help…"></textarea>
-        </div>
-        <button class="btn-send" onclick="sendContact()">
-          Send Message
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:6px;vertical-align:middle"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-        </button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- ══ FOOTER ════════════════════════════════════════════════ -->
 <footer class="footer">
   <div class="container">
     <div class="footer-grid">
       <div>
         <div class="footer-brand-mark">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="none"><path d="M12 2L3 9v13h6v-7h6v7h6V9z"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2L3 9v13h6v-7h6v7h6V9z"/></svg>
         </div>
         <div class="footer-brand-name">Dorm<span class="gold">Finder</span></div>
         <p class="footer-desc">A web-based dormitory search and management system helping students find verified accommodations near their campus in Minglanilla.</p>
       </div>
       <div>
         <div class="footer-col-label">Quick Links</div>
-        <a class="footer-link" href="browser.html">Browse Dorms</a>
-        <a class="footer-link" href="#how">How It Works</a>
-        <a class="footer-link" href="#features">Features</a>
+        <a class="footer-link" href="browser.html">Browse Accommodations</a>
+        <a class="footer-link" href="#why">Why DormFinder</a>
+        <a class="footer-link" href="#map">Location</a>
         <a class="footer-link" href="#contact">Contact</a>
       </div>
       <div>
@@ -1424,7 +605,7 @@
         <a class="footer-link" href="signup.html">List a Property</a>
       </div>
       <div>
-        <div class="footer-col-label">Scope</div>
+        <div class="footer-col-label">Platform</div>
         <span class="footer-link">Dormitory Search</span>
         <span class="footer-link">Boarding Houses</span>
         <span class="footer-link">Booking Requests</span>
@@ -1434,362 +615,499 @@
 
     <div class="footer-bottom">
       <div class="footer-copy">© 2026 DormFinder. All rights reserved.</div>
-      <div class="footer-scope">Capstone Project — Web-Based Dormitory Search & Management System</div>
+      <div class="footer-scope">Capstone Project — Web-Based Dormitory Search &amp; Management System</div>
     </div>
   </div>
 </footer>
 
+<!-- ══ SCRIPTS ════════════════════════════════════════════════ -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-  // ── Hero background map: shows a pin for every property owners have added ──
-  (function initHeroMap() {
-    const DEFAULT_CENTER = [10.2475, 123.8000];
-    const map = L.map('heroMap', {
-      center: DEFAULT_CENTER,
-      zoom: 14,
-      zoomControl: false,
-      scrollWheelZoom: false, // keep page scrolling smooth
-      attributionControl: true,
-      zoomSnap: 0.25,
-      zoomAnimation: true,
-      markerZoomAnimation: true,
-      inertia: true
-    });
-
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
-    }).addTo(map);
-
-    const pinIcon = L.divIcon({
-      className: '',
-      html: '<div class="df-pin"></div>',
-      iconSize: [30, 30],
-      iconAnchor: [15, 30],
-      popupAnchor: [0, -30]
-    });
-
-    // ── Property side panel ──────────────────────────────────────────────
-    const PANEL_W = 384;
-    const panel = document.getElementById('dormPanel');
-    const panelScroll = document.getElementById('dpScroll');
-    const toastEl = document.getElementById('dpToast');
-    const FALLBACK_IMG = 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=800&q=80';
-    let activeMarker = null;
-    let toastTimer = null;
-
-    // All owner-entered text is escaped before it goes into the template
-    const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => (
-      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
-    ));
-
-    const svg = (d, size = 20) =>
-      `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
-    const ICON = {
-      close:   svg('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>', 18),
-      photos:  svg('<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>', 16),
-      dir:     svg('<polygon points="3 11 22 2 13 21 11 13 3 11"/>'),
-      msg:     svg('<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'),
-      map:     svg('<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'),
-      share:   svg('<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/>'),
-      pin:     svg('<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'),
-      door:    svg('<path d="M3 21h18"/><path d="M5 21V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v17"/><circle cx="15" cy="12" r="1"/>'),
-      user:    svg('<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>'),
-      mail:    svg('<rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22 6 12 13 2 6"/>'),
-      cross:   svg('<circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/>'),
-      bed:     svg('<path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M2 16h20"/><path d="M6 10V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/>', 18)
-    };
-
-    function showToast(html) {
-      toastEl.innerHTML = html;
-      toastEl.classList.add('show');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toastEl.classList.remove('show'), 3200);
-    }
-
-    function renderPanel(p) {
-      const lat = parseFloat(p.lat), lon = parseFloat(p.lon);
-      const imgs = (p.images && p.images.length) ? p.images : [p.image || FALLBACK_IMG];
-      const total = Math.max(parseInt(p.totalRooms) || 1, 1);
-      const avail = Math.min(Math.max(parseInt(p.availRooms) || 0, 0), total);
-      const slotsText = avail > 0 ? `${avail} slot${avail === 1 ? '' : 's'} left` : 'Fully booked';
-      const slotsCls = avail === 0 ? 'none' : (avail <= 2 ? 'low' : '');
-      const amenities = (p.amenities && p.amenities.length) ? p.amenities : [];
-      const priceOf = a => { const v = p.amenityPrices ? Number(p.amenityPrices[a]) : 0; return v > 0 ? v : 0; };
-      const peso = n => '₱' + Math.round(n).toLocaleString('en-PH');
-      const rentNum = parseFloat(String(p.rawRent || p.rent || '0').replace(/[^0-9.]/g, '')) || 0;
-      const fees = amenities.reduce((sum, a) => sum + priceOf(a), 0);
-      const ownerName = p.owner_name || 'Property Owner';
-
-      let rooms = '';
-      for (let i = 1; i <= total; i++) {
-        const ok = i <= avail;
-        rooms += `
-          <div class="dp-room ${ok ? '' : 'taken'}">
-            <div><b>Room ${100 + i}</b><small>${esc(p.rent)}/mo</small></div>
-            <span class="st ${ok ? 'ok' : 'no'}">• ${ok ? 'Available' : 'Taken'}</span>
-          </div>`;
-      }
-
-      panelScroll.innerHTML = `
-        <div class="dp-photo">
-          <img id="dpImg" src="${esc(imgs[0])}" alt="${esc(p.name)}">
-          <button class="dp-close" data-act="close" aria-label="Close">${ICON.close}</button>
-          <button class="dp-seephotos" data-act="photos">${ICON.photos} ${imgs.length > 1 ? `See photos (<span id="dpPhotoCount">1/${imgs.length}</span>)` : '1 photo'}</button>
-          <div class="dp-price"><b>${fees ? peso(rentNum + fees) : esc(p.rent)}</b><small>${fees ? 'per month total' : 'per month'}</small></div>
-        </div>
-
-        <div class="dp-head">
-          <h2 class="dp-name">${esc(p.name || 'Property')}</h2>
-          <div class="dp-meta">
-            <span>${Number(p.reviewCount) > 0 ? Number(p.rating).toFixed(1) : 'New'}</span><span class="dp-stars">${'★'.repeat(Math.round(Number(p.rating) || 0))}${'☆'.repeat(5 - Math.round(Number(p.rating) || 0))}</span>${Number(p.reviewCount) > 0 ? `<span>(${p.reviewCount})</span>` : ''}
-            <span>• ${esc(p.type || 'Dormitory')}</span>
-          </div>
-          <span class="dp-slots ${slotsCls}">${slotsText}</span>
-        </div>
-
-        <div class="dp-tabs" role="tablist">
-          <button class="dp-tab active" data-tab="overview" role="tab">Overview</button>
-          <button class="dp-tab" data-tab="rooms" role="tab">Rooms</button>
-          <button class="dp-tab" data-tab="details" role="tab">Details</button>
-        </div>
-
-        <div class="dp-actions">
-          <button class="dp-act primary" data-act="directions"><span class="ic">${ICON.dir}</span>Directions</button>
-          <button class="dp-act" data-act="message"><span class="ic">${ICON.msg}</span>Message</button>
-          <button class="dp-act" data-act="openmap"><span class="ic">${ICON.map}</span>Open map</button>
-          <button class="dp-act" data-act="share"><span class="ic">${ICON.share}</span>Share</button>
-        </div>
-
-        <a class="dp-cta" href="browser.html?property=${encodeURIComponent(p.id)}">${ICON.bed} Check availability</a>
-
-        <div class="dp-pane active" data-pane="overview">
-          <div class="dp-row">${ICON.pin}<span>${esc(p.address || 'Minglanilla, Cebu')}</span></div>
-          ${fees ? `<div class="dp-row">${ICON.cross}<span><b>${peso(rentNum + fees)}/month total</b> <span style="color:#64748b">(${esc(p.rent)} rent + ${peso(fees)} amenities)</span></span></div>` : ''}
-          <div class="dp-row">${ICON.door}<span>${avail} of ${total} room${total === 1 ? '' : 's'} available</span></div>
-          <div class="dp-row">${ICON.user}<span>${esc(ownerName)} <span style="color:#64748b">· Property Owner</span></span></div>
-          ${p.owner_email ? `<div class="dp-row">${ICON.mail}<a href="mailto:${esc(p.owner_email)}">${esc(p.owner_email)}</a></div>` : ''}
-          <div class="dp-row">${ICON.cross}<span>${lat.toFixed(4)}, ${lon.toFixed(4)}</span></div>
-        </div>
-
-        <div class="dp-pane" data-pane="rooms">
-          <div class="dp-label">Select a room to book</div>
-          ${rooms}
-        </div>
-
-        <div class="dp-pane" data-pane="details">
-          <div class="dp-label">About</div>
-          <div class="dp-text">${esc(p.desc || 'No description provided.')}</div>
-          <div class="dp-label">Amenities</div>
-          ${amenities.length
-            ? `<div class="dp-chips">${amenities.map(a => `<span class="dp-chip">✓ ${esc(a)}${priceOf(a) ? `<span class="t paid">+${peso(priceOf(a))}/mo</span>` : '<span class="t free">Free</span>'}</span>`).join('')}</div>`
-            : '<div class="dp-text">No amenities listed.</div>'}
-          <div class="dp-label">House rules</div>
-          <div class="dp-rules">${esc(p.rules || 'No specific rules.')}</div>
-        </div>
-      `;
-      panelScroll.scrollTop = 0;
-      panelScroll._photoIdx = 0;
-      panelScroll._imgs = imgs;
-      panelScroll._prop = p;
-    }
-
-    function openPanel(p, marker) {
-      renderPanel(p);
-      panel.classList.add('open');
-      panel.setAttribute('aria-hidden', 'false');
-
-      if (activeMarker && activeMarker._icon) activeMarker._icon.firstChild.classList.remove('active');
-      activeMarker = marker;
-      if (marker._icon) marker._icon.firstChild.classList.add('active');
-
-      // Pan so the pin sits in the middle of the area that is NOT covered by the panel
-      const z = Math.max(map.getZoom(), 15);
-      const shift = window.innerWidth > 700 ? PANEL_W / 2 : 0;
-      const target = map.unproject(map.project(marker.getLatLng(), z).subtract([shift, 0]), z);
-      map.flyTo(target, z, { duration: 0.7 });
-    }
-
-    function closePanel() {
-      panel.classList.remove('open');
-      panel.setAttribute('aria-hidden', 'true');
-      if (activeMarker && activeMarker._icon) activeMarker._icon.firstChild.classList.remove('active');
-      activeMarker = null;
-    }
-
-    panel.addEventListener('click', e => {
-      const tab = e.target.closest('[data-tab]');
-      if (tab) {
-        panel.querySelectorAll('.dp-tab').forEach(t => t.classList.toggle('active', t === tab));
-        panel.querySelectorAll('.dp-pane').forEach(el => el.classList.toggle('active', el.dataset.pane === tab.dataset.tab));
-        return;
-      }
-      const btn = e.target.closest('[data-act]');
-      if (!btn) return;
-      const p = panelScroll._prop;
-      const lat = parseFloat(p.lat), lon = parseFloat(p.lon);
-
-      switch (btn.dataset.act) {
-        case 'close':
-          closePanel();
-          break;
-        case 'photos': {
-          const imgs = panelScroll._imgs;
-          if (imgs.length < 2) break;
-          panelScroll._photoIdx = (panelScroll._photoIdx + 1) % imgs.length;
-          document.getElementById('dpImg').src = imgs[panelScroll._photoIdx];
-          document.getElementById('dpPhotoCount').textContent = `${panelScroll._photoIdx + 1}/${imgs.length}`;
-          break;
-        }
-        case 'directions':
-          window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`, '_blank', 'noopener');
-          break;
-        case 'openmap':
-          window.open(`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=17/${lat}/${lon}`, '_blank', 'noopener');
-          break;
-        case 'message': {
-          const u = JSON.parse(localStorage.getItem('df_user') || 'null');
-          if (!u || !u.email) {
-            showToast('Sign in as a student to message the owner. <a href="signin.html">Sign in</a>');
-          } else if (u.role === 'student') {
-            window.location.href = 'student-dashboard.html';
-          } else {
-            showToast('Only students can message property owners.');
-          }
-          break;
-        }
-        case 'share': {
-          const url = `${location.origin}/browser.html?property=${encodeURIComponent(p.id)}`;
-          if (navigator.share) {
-            navigator.share({ title: p.name, url }).catch(() => {});
-          } else if (navigator.clipboard) {
-            navigator.clipboard.writeText(url).then(() => showToast('Link copied to clipboard'));
-          } else {
-            showToast(esc(url));
-          }
-          break;
-        }
-      }
-    });
-
-    map.on('click', closePanel);
-
-    // Click the map background -> hide the hero text so the map is the focus
-    const heroEl = document.getElementById('hero');
-    map.on('click', () => heroEl.classList.add('focus-map'));
-    document.getElementById('heroRestore').addEventListener('click', () => heroEl.classList.remove('focus-map'));
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
-
-    fetch('/api/properties')
-      .then(r => r.json())
-      .then(data => {
-        if (!data || !data.success) return;
-        const points = [];
-        data.properties.forEach(p => {
-          const lat = parseFloat(p.lat), lon = parseFloat(p.lon);
-          if (!isFinite(lat) || !isFinite(lon)) return; // listings without a saved pin
-          const marker = L.marker([lat, lon], { icon: pinIcon, title: p.name }).addTo(map);
-          marker.on('click', () => openPanel(p, marker));
-          points.push([lat, lon]);
-        });
-        if (points.length === 1) {
-          map.flyTo(points[0], 15, { duration: 1.2 });
-        } else if (points.length > 1) {
-          map.flyToBounds(points, { padding: [80, 80], maxZoom: 15, duration: 1.2 });
-        }
-      })
-      .catch(err => console.error('Could not load property pins:', err));
-  })();
-
-  // ── "Find dorms near your school" map: a pin for every listed property ──
-  (function initAreaMap() {
-    const el = document.getElementById('areaMap');
-    if (!el) return;
-    const map = L.map(el, { center: [10.2475, 123.8000], zoom: 14, scrollWheelZoom: false, zoomSnap: 0.25 });
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
-    }).addTo(map);
-    map.on('click', () => map.scrollWheelZoom.enable());
-
-    const icon = L.divIcon({ className: '', html: '<div class="df-pin"></div>',
-      iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -30] });
-    const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g,
-      c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
-
-    fetch('/api/properties')
-      .then(r => r.json())
-      .then(data => {
-        if (!data || !data.success) return;
-        const points = [];
-        data.properties.forEach(p => {
-          const lat = parseFloat(p.lat), lon = parseFloat(p.lon);
-          if (!isFinite(lat) || !isFinite(lon)) return;
-          L.marker([lat, lon], { icon, title: p.name }).addTo(map).bindPopup(
-            `<div class="df-area-popup"><strong>${esc(p.name)}</strong>` +
-            `<span>${esc(p.address || '')}</span>` +
-            `<span>${esc(p.rent || '')}${p.rent ? '/month' : ''}</span>` +
-            `<a href="browser.html">View listings →</a></div>`);
-          points.push([lat, lon]);
-        });
-        if (points.length === 1) map.setView(points[0], 15);
-        else if (points.length > 1) map.fitBounds(points, { padding: [50, 50], maxZoom: 15 });
-      })
-      .catch(err => console.error('Could not load property pins:', err));
-  })();
-
-  window.addEventListener('scroll', () => {
-    document.getElementById('land-nav').classList.toggle('scrolled', window.scrollY > 40);
+/* ── HERO MAP ──────────────────────────────────────────────── */
+(function initHeroMap() {
+  const DEFAULT_CENTER = [10.2475, 123.8000];
+  const map = L.map('heroMap', {
+    center: DEFAULT_CENTER,
+    zoom: 14,
+    zoomControl: false,
+    scrollWheelZoom: false,
+    attributionControl: true,
+    zoomSnap: 0.25,
+    zoomAnimation: true,
+    markerZoomAnimation: true,
+    inertia: true
   });
 
-  function browseOrScroll(e) {
-    if (e) e.preventDefault();
-    window.location.href = 'browser.html';
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+  }).addTo(map);
+
+  const pinIcon = L.divIcon({
+    className: '',
+    html: '<div class="df-pin"></div>',
+    iconSize: [28, 28],
+    iconAnchor: [14, 28],
+    popupAnchor: [0, -28]
+  });
+
+  /* ── Property side panel ─────────────────────────────── */
+  const PANEL_W = 384;
+  const panel    = document.getElementById('dormPanel');
+  const panelScroll = document.getElementById('dpScroll');
+  const toastEl  = document.getElementById('dpToast');
+  const FALLBACK_IMG = 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=800&q=80';
+  let activeMarker = null;
+  let toastTimer   = null;
+
+  const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => (
+    { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]
+  ));
+
+  const svg = (d, size=20) =>
+    `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+
+  const ICON = {
+    close:  svg('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',18),
+    photos: svg('<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>',16),
+    dir:    svg('<polygon points="3 11 22 2 13 21 11 13 3 11"/>'),
+    msg:    svg('<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'),
+    map:    svg('<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'),
+    share:  svg('<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/>'),
+    pin:    svg('<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>'),
+    door:   svg('<path d="M3 21h18"/><path d="M5 21V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v17"/><circle cx="15" cy="12" r="1"/>'),
+    user:   svg('<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>'),
+    mail:   svg('<rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22 6 12 13 2 6"/>'),
+    cross:  svg('<circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/>'),
+    bed:    svg('<path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M2 16h20"/><path d="M6 10V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/>',18)
+  };
+
+  function showPanelToast(html) {
+    toastEl.innerHTML = html;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 3200);
   }
 
-  function sendContact() {
-    const name = document.getElementById('c-name').value.trim();
-    const email = document.getElementById('c-email').value.trim();
-    const msg = document.getElementById('c-message').value.trim();
-    if (!name || !email || !msg) {
-      alert('Please fill in required fields.');
+  function renderPanel(p) {
+    const lat = parseFloat(p.lat), lon = parseFloat(p.lon);
+    const imgs  = (p.images && p.images.length) ? p.images : [p.image || FALLBACK_IMG];
+    const total = Math.max(parseInt(p.totalRooms) || 1, 1);
+    const avail = Math.min(Math.max(parseInt(p.availRooms) || 0, 0), total);
+    const slotsText = avail > 0 ? `${avail} slot${avail === 1 ? '' : 's'} left` : 'Fully booked';
+    const slotsCls  = avail === 0 ? 'none' : (avail <= 2 ? 'low' : 'avail');
+    const amenities = (p.amenities && p.amenities.length) ? p.amenities : [];
+    const priceOf   = a => { const v = p.amenityPrices ? Number(p.amenityPrices[a]) : 0; return v > 0 ? v : 0; };
+    const peso      = n => '₱' + Math.round(n).toLocaleString('en-PH');
+    const rentNum   = parseFloat(String(p.rawRent || p.rent || '0').replace(/[^0-9.]/g, '')) || 0;
+    const fees      = amenities.reduce((sum, a) => sum + priceOf(a), 0);
+    const ownerName = p.owner_name || 'Property Owner';
+
+    let rooms = '';
+    for (let i = 1; i <= total; i++) {
+      const ok = i <= avail;
+      rooms += `
+        <div class="dp-room ${ok ? '' : 'taken'}">
+          <div><b>Room ${100 + i}</b><small>${esc(p.rent)}/mo</small></div>
+          <span class="st ${ok ? 'ok' : 'no'}">• ${ok ? 'Available' : 'Taken'}</span>
+        </div>`;
+    }
+
+    panelScroll.innerHTML = `
+      <div class="dp-photo">
+        <img id="dpImg" src="${esc(imgs[0])}" alt="${esc(p.name)}">
+        <button class="dp-close" data-act="close" aria-label="Close">${ICON.close}</button>
+        <button class="dp-seephotos" data-act="photos">${ICON.photos} ${imgs.length > 1 ? `See photos (<span id="dpPhotoCount">1/${imgs.length}</span>)` : '1 photo'}</button>
+        <div class="dp-price"><b>${fees ? peso(rentNum + fees) : esc(p.rent)}</b><small>${fees ? 'per month total' : 'per month'}</small></div>
+      </div>
+
+      <div class="dp-head">
+        <h2 class="dp-name">${esc(p.name || 'Property')}</h2>
+        <div class="dp-meta">
+          <span>${Number(p.reviewCount) > 0 ? Number(p.rating).toFixed(1) : 'New'}</span>
+          <span class="dp-stars">${'★'.repeat(Math.round(Number(p.rating)||0))}${'☆'.repeat(5-Math.round(Number(p.rating)||0))}</span>
+          ${Number(p.reviewCount) > 0 ? `<span>(${p.reviewCount})</span>` : ''}
+          <span>• ${esc(p.type || 'Dormitory')}</span>
+        </div>
+        <span class="dp-slots ${slotsCls}">${slotsText}</span>
+      </div>
+
+      <div class="dp-tabs" role="tablist">
+        <button class="dp-tab active" data-tab="overview" role="tab">Overview</button>
+        <button class="dp-tab" data-tab="rooms" role="tab">Rooms</button>
+        <button class="dp-tab" data-tab="details" role="tab">Details</button>
+      </div>
+
+      <div class="dp-actions">
+        <button class="dp-act primary" data-act="directions"><span class="ic">${ICON.dir}</span>Directions</button>
+        <button class="dp-act" data-act="message"><span class="ic">${ICON.msg}</span>Message</button>
+        <button class="dp-act" data-act="openmap"><span class="ic">${ICON.map}</span>Open map</button>
+        <button class="dp-act" data-act="share"><span class="ic">${ICON.share}</span>Share</button>
+      </div>
+
+      <a class="dp-cta" href="browser.html?property=${encodeURIComponent(p.id)}">${ICON.bed} Check availability</a>
+
+      <div class="dp-pane active" data-pane="overview">
+        <div class="dp-row">${ICON.pin}<span>${esc(p.address || 'Minglanilla, Cebu')}</span></div>
+        ${fees ? `<div class="dp-row">${ICON.cross}<span><b>${peso(rentNum + fees)}/month total</b> <span style="color:#64748b">(${esc(p.rent)} rent + ${peso(fees)} amenities)</span></span></div>` : ''}
+        <div class="dp-row">${ICON.door}<span>${avail} of ${total} room${total===1?'':'s'} available</span></div>
+        <div class="dp-row">${ICON.user}<span>${esc(ownerName)} <span style="color:#64748b">· Property Owner</span></span></div>
+        ${p.owner_email ? `<div class="dp-row">${ICON.mail}<a href="mailto:${esc(p.owner_email)}">${esc(p.owner_email)}</a></div>` : ''}
+        ${isFinite(lat) && isFinite(lon) ? `<div class="dp-row">${ICON.cross}<span>${lat.toFixed(4)}, ${lon.toFixed(4)}</span></div>` : ''}
+      </div>
+
+      <div class="dp-pane" data-pane="rooms">
+        <div class="dp-label">Select a room to book</div>
+        ${rooms}
+      </div>
+
+      <div class="dp-pane" data-pane="details">
+        <div class="dp-label">About</div>
+        <div class="dp-text">${esc(p.desc || 'No description provided.')}</div>
+        <div class="dp-label">Amenities</div>
+        ${amenities.length
+          ? `<div class="dp-chips">${amenities.map(a => `<span class="dp-chip">✓ ${esc(a)}${priceOf(a)?`<span class="t paid">+${peso(priceOf(a))}/mo</span>`:'<span class="t free">Free</span>'}</span>`).join('')}</div>`
+          : '<div class="dp-text">No amenities listed.</div>'}
+        <div class="dp-label">House rules</div>
+        <div class="dp-rules">${esc(p.rules || 'No specific rules.')}</div>
+      </div>`;
+
+    panelScroll.scrollTop = 0;
+    panelScroll._photoIdx = 0;
+    panelScroll._imgs     = imgs;
+    panelScroll._prop     = p;
+  }
+
+  function openPanel(p, marker) {
+    renderPanel(p);
+    panel.classList.add('open');
+    panel.setAttribute('aria-hidden', 'false');
+    if (activeMarker && activeMarker._icon) activeMarker._icon.firstChild.classList.remove('active');
+    activeMarker = marker;
+    if (marker._icon) marker._icon.firstChild.classList.add('active');
+    const z      = Math.max(map.getZoom(), 15);
+    const shift  = window.innerWidth > 700 ? PANEL_W / 2 : 0;
+    const target = map.unproject(map.project(marker.getLatLng(), z).subtract([shift, 0]), z);
+    map.flyTo(target, z, { duration: 0.7 });
+  }
+
+  function closePanel() {
+    panel.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+    if (activeMarker && activeMarker._icon) activeMarker._icon.firstChild.classList.remove('active');
+    activeMarker = null;
+  }
+
+  panel.addEventListener('click', e => {
+    const tab = e.target.closest('[data-tab]');
+    if (tab) {
+      panel.querySelectorAll('.dp-tab').forEach(t => t.classList.toggle('active', t === tab));
+      panel.querySelectorAll('.dp-pane').forEach(el => el.classList.toggle('active', el.dataset.pane === tab.dataset.tab));
       return;
     }
-    alert('Message sent! We\'ll get back to you within 24 hours.');
-    ['c-name', 'c-email', 'c-subject', 'c-message'].forEach(id => document.getElementById(id).value = '');
+    const btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    const p   = panelScroll._prop;
+    const lat = parseFloat(p.lat), lon = parseFloat(p.lon);
+
+    switch (btn.dataset.act) {
+      case 'close': closePanel(); break;
+      case 'photos': {
+        const imgs = panelScroll._imgs;
+        if (imgs.length < 2) break;
+        panelScroll._photoIdx = (panelScroll._photoIdx + 1) % imgs.length;
+        document.getElementById('dpImg').src = imgs[panelScroll._photoIdx];
+        document.getElementById('dpPhotoCount').textContent = `${panelScroll._photoIdx+1}/${imgs.length}`;
+        break;
+      }
+      case 'directions':
+        window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`, '_blank', 'noopener');
+        break;
+      case 'openmap':
+        window.open(`https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=17/${lat}/${lon}`, '_blank', 'noopener');
+        break;
+      case 'message': {
+        const u = JSON.parse(localStorage.getItem('df_user') || 'null');
+        if (!u || !u.email) {
+          showPanelToast('Sign in as a student to message the owner. <a href="signin.html">Sign in</a>');
+        } else if (u.role === 'student') {
+          window.location.href = 'student-dashboard.html';
+        } else {
+          showPanelToast('Only students can message property owners.');
+        }
+        break;
+      }
+      case 'share': {
+        const url = `${location.origin}/browser.html?property=${encodeURIComponent(p.id)}`;
+        if (navigator.share) {
+          navigator.share({ title: p.name, url }).catch(() => {});
+        } else if (navigator.clipboard) {
+          navigator.clipboard.writeText(url).then(() => showPanelToast('Link copied to clipboard'));
+        } else {
+          showPanelToast(esc(url));
+        }
+        break;
+      }
+    }
+  });
+
+  map.on('click', closePanel);
+
+  const heroEl = document.getElementById('hero');
+  map.on('click', () => heroEl.classList.add('focus-map'));
+  document.getElementById('heroRestore').addEventListener('click', () => heroEl.classList.remove('focus-map'));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePanel(); });
+
+  /* Load pins from API */
+  fetch('/api/properties')
+    .then(r => r.json())
+    .then(data => {
+      if (!data || !data.success) return;
+      const points = [];
+      data.properties.forEach(p => {
+        const lat = parseFloat(p.lat), lon = parseFloat(p.lon);
+        if (!isFinite(lat) || !isFinite(lon)) return;
+        const pinHtml = p.availability === 'taken'
+          ? '<div class="df-pin" style="background:#64748B"></div>'
+          : p.availability === 'reserved'
+            ? '<div class="df-pin" style="background:#FFC928"></div>'
+            : '<div class="df-pin"></div>';
+        const icon = L.divIcon({ className:'', html: pinHtml, iconSize:[28,28], iconAnchor:[14,28], popupAnchor:[0,-28] });
+        const marker = L.marker([lat, lon], { icon, title: p.name }).addTo(map);
+        marker.on('click', () => openPanel(p, marker));
+        points.push([lat, lon]);
+      });
+      if (points.length === 1) {
+        map.flyTo(points[0], 15, { duration: 1.2 });
+      } else if (points.length > 1) {
+        map.flyToBounds(points, { padding:[80,80], maxZoom:15, duration:1.2 });
+      }
+    })
+    .catch(err => console.error('Could not load hero pins:', err));
+})();
+
+/* ── FEATURED ACCOMMODATIONS ──────────────────────────────── */
+(function loadFeatured() {
+  const grid = document.getElementById('featured-grid');
+  if (!grid) return;
+
+  const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c =>
+    ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+  const PLACEHOLDER = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='225' viewBox='0 0 400 225'%3E%3Crect width='400' height='225' fill='%230D1829'/%3E%3Cpath d='M200 70l-50 40v55h30v-30h40v30h30V110z' fill='%232563EB' opacity='.4'/%3E%3C/svg%3E`;
+
+  function availBadge(avail) {
+    if (avail === 'taken')    return `<span class="badge badge-gray">● Fully Booked</span>`;
+    if (avail === 'reserved') return `<span class="badge badge-yellow">● Reserved</span>`;
+    return `<span class="badge badge-green">● Available</span>`;
   }
 
-  (function applySessionNav() {
-    const u = JSON.parse(localStorage.getItem('df_user') || 'null');
-    if (!u || !u.name) return;
+  function stars(rating, count) {
+    if (!count) return '<span style="font-size:0.78rem;color:rgba(203,213,225,0.4)">No reviews yet</span>';
+    const full  = Math.round(rating);
+    const empty = 5 - full;
+    return `<span class="prop-card-stars">${'★'.repeat(full)}${'☆'.repeat(empty)}</span>
+            <span style="font-size:0.8rem;color:rgba(203,213,225,0.6)">${rating.toFixed(1)} (${count})</span>`;
+  }
 
-    const dashRoutes = {
-      student: 'student-dashboard.html',
-      owner: 'owner-dashboard.html',
-      admin: 'admin-dashboard.html',
-    };
-    const dest = dashRoutes[u.role] || 'student-dashboard.html';
-    const initials = u.initials || u.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
-    const firstName = u.name.split(' ')[0];
+  fetch('/api/properties')
+    .then(r => r.json())
+    .then(data => {
+      if (!data || !data.success || !data.properties.length) {
+        grid.innerHTML = `
+          <div class="featured-empty">
+            <p>No listings are available right now. Check back soon.</p>
+            <a href="signup.html" class="btn btn-primary btn-sm">List your property</a>
+          </div>`;
+        return;
+      }
 
-    const navRight = document.getElementById('nav-right');
-    if (navRight) {
-      navRight.innerHTML = `
-        <div style="width:32px;height:32px;border-radius:50%;background:#314c75;
-                    color:white;font-weight:700;font-size:0.75rem;display:flex;
-                    align-items:center;justify-content:center;flex-shrink:0">${initials}</div>
-        <span style="color:rgba(255,255,255,0.85);font-weight:600;font-size:0.875rem">${firstName}</span>
-        <button class="btn-nav-solid" onclick="window.location.href='${dest}'">
-          Dashboard
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-            style="margin-left:5px;vertical-align:middle">
-            <line x1="5" y1="12" x2="19" y2="12"/>
-            <polyline points="12 5 19 12 12 19"/>
-          </svg>
-        </button>`;
-    }
-  })();
+      const list = data.properties.slice(0, 6);
+      grid.innerHTML = list.map(p => {
+        const imgSrc    = (p.images && p.images[0]) || p.image || PLACEHOLDER;
+        const amenities = (p.amenities || []).slice(0, 3);
+        const amenHtml  = amenities.map(a => `<span class="prop-card-amenity">${esc(a)}</span>`).join('');
+        const ratingHtml = stars(p.rating || 0, p.reviewCount || 0);
+
+        return `
+          <article class="prop-card">
+            <div class="prop-card-img">
+              <img src="${esc(imgSrc)}" alt="${esc(p.name)}" loading="lazy"
+                   onerror="this.src='${PLACEHOLDER}'"/>
+              <div class="prop-card-badges">
+                ${availBadge(p.availability || 'available')}
+                <span class="badge badge-blue">${esc(p.type || 'Dormitory')}</span>
+              </div>
+            </div>
+            <div class="prop-card-body">
+              <div class="prop-card-name">${esc(p.name)}</div>
+              <div class="prop-card-addr">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                ${esc(p.address || 'Minglanilla, Cebu')}
+              </div>
+              ${amenHtml ? `<div class="prop-card-amenities">${amenHtml}</div>` : ''}
+              <div class="prop-card-rating">${ratingHtml}</div>
+            </div>
+            <div class="prop-card-footer">
+              <div class="prop-card-price">
+                ${esc(p.rent || '—')}
+                <small>per month</small>
+              </div>
+              <a href="browser.html?property=${encodeURIComponent(p.id)}" class="btn btn-primary btn-sm">
+                View Details
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </div>
+          </article>`;
+      }).join('');
+    })
+    .catch(() => {
+      grid.innerHTML = `
+        <div class="featured-empty">
+          <p>Could not load listings. Make sure the server is running.</p>
+        </div>`;
+    });
+})();
+
+/* ── AREA MAP ──────────────────────────────────────────────── */
+(function initAreaMap() {
+  const el = document.getElementById('areaMap');
+  if (!el) return;
+
+  const map = L.map(el, {
+    center: [10.2475, 123.8000],
+    zoom: 14,
+    scrollWheelZoom: false,
+    zoomSnap: 0.25
+  });
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+  }).addTo(map);
+
+  map.on('click', () => map.scrollWheelZoom.enable());
+
+  const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g,
+    c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+  fetch('/api/properties')
+    .then(r => r.json())
+    .then(data => {
+      if (!data || !data.success) return;
+      const points = [];
+      data.properties.forEach(p => {
+        const lat = parseFloat(p.lat), lon = parseFloat(p.lon);
+        if (!isFinite(lat) || !isFinite(lon)) return;
+
+        const pinColor = p.availability === 'taken' ? '#64748B'
+                       : p.availability === 'reserved' ? '#FFC928'
+                       : '#2563EB';
+        const icon = L.divIcon({
+          className: '',
+          html: `<div class="df-pin" style="background:${pinColor}"></div>`,
+          iconSize: [28,28], iconAnchor: [14,28], popupAnchor: [0,-28]
+        });
+
+        L.marker([lat, lon], { icon, title: p.name }).addTo(map).bindPopup(
+          `<div class="df-area-popup">
+             <strong>${esc(p.name)}</strong>
+             <span>${esc(p.address || '')}</span>
+             <span>${esc(p.rent || '')}${p.rent ? '/month' : ''}</span>
+             <a href="browser.html?property=${encodeURIComponent(p.id)}">View listing →</a>
+           </div>`);
+        points.push([lat, lon]);
+      });
+      if (points.length === 1) map.setView(points[0], 15);
+      else if (points.length > 1) map.fitBounds(points, { padding:[50,50], maxZoom:15 });
+    })
+    .catch(err => console.error('Could not load area pins:', err));
+})();
+
+/* ── NAVBAR SCROLL ─────────────────────────────────────────── */
+window.addEventListener('scroll', () => {
+  document.getElementById('land-nav').classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+/* ── MOBILE NAV DRAWER ─────────────────────────────────────── */
+(function initDrawer() {
+  const hamburger = document.getElementById('nav-hamburger');
+  const drawer    = document.getElementById('nav-drawer');
+  const backdrop  = document.getElementById('drawer-backdrop');
+  const closeBtn  = document.getElementById('drawer-close');
+
+  function open()  { drawer.classList.add('open');  hamburger.setAttribute('aria-expanded','true'); }
+  function close() { drawer.classList.remove('open'); hamburger.setAttribute('aria-expanded','false'); }
+
+  hamburger.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  backdrop.addEventListener('click', close);
+
+  drawer.querySelectorAll('.drawer-link, a[href]').forEach(el => {
+    el.addEventListener('click', () => setTimeout(close, 100));
+  });
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
+
+/* ── CONTACT FORM ──────────────────────────────────────────── */
+function sendContact() {
+  const name    = document.getElementById('c-name').value.trim();
+  const email   = document.getElementById('c-email').value.trim();
+  const message = document.getElementById('c-message').value.trim();
+
+  if (!name || !email || !message) {
+    const btn = document.getElementById('btn-send');
+    btn.textContent = 'Please fill in required fields.';
+    setTimeout(() => {
+      btn.innerHTML = 'Send Message <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+    }, 2200);
+    return;
+  }
+
+  document.getElementById('contact-form-body').style.display = 'none';
+  document.getElementById('contact-success').style.display   = 'block';
+}
+
+/* ── AUTHENTICATED NAV ─────────────────────────────────────── */
+(function applySessionNav() {
+  const u = JSON.parse(localStorage.getItem('df_user') || 'null');
+  if (!u || !u.name) return;
+
+  const dashRoutes = { student:'student-dashboard.html', owner:'owner-dashboard.html', admin:'admin-dashboard.html' };
+  const dest      = dashRoutes[u.role] || 'student-dashboard.html';
+  const initials  = u.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+  const firstName = u.name.split(' ')[0];
+
+  const navRight = document.getElementById('nav-right');
+  if (navRight) {
+    navRight.innerHTML = `
+      <div style="width:32px;height:32px;border-radius:50%;background:#2563EB;
+                  color:#fff;font-weight:700;font-size:0.75rem;display:flex;
+                  align-items:center;justify-content:center;flex-shrink:0">${initials}</div>
+      <span style="color:rgba(255,255,255,0.85);font-weight:600;font-size:0.875rem">${firstName}</span>
+      <a class="btn-nav-solid" href="${dest}">
+        Dashboard
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>`;
+  }
+})();
+
+/* ── SCROLL REVEAL ─────────────────────────────────────────── */
+(function initReveal() {
+  const els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(el => el.classList.add('visible'));
+    return;
+  }
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(el => obs.observe(el));
+})();
 </script>
 </body>
 </html>
